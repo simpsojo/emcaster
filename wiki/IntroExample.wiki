@@ -1,0 +1,23 @@
+#Welcome to Emcaster
+
+= Introduction =
+
+Emcaster is a reliable multicast library written in c#.
+
+
+= Example =
+
+{{{
+PgmSubscriber receiveSocket = new PgmSubscriber("224.0.0.23", 1234);
+
+socketMonitor = SocketMonitor();
+
+receiveSocket.ReceiveEvent += socketMonitor.OnReceive;
+
+receiveSocket.Start();
+
+PgmPublisher sendSocket = new PgmPublisher("224.0.0.23", 1234);
+sendSocket.Start();
+
+sendSocket.Publish(1);
+}}}
