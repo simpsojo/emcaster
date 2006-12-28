@@ -28,10 +28,13 @@ for x in xrange(10):
 	sendSocket.Publish(x)
 	Thread.Sleep(1000)
 
-sendSocket.Dispose()
-print "closed sender"
-receiveSocket.Dispose()
-print "closed receiver"
+sendStats = sendSocket.GetSenderStats()
 
+sendSocket.Dispose()
+
+receiveSocket.Dispose()	
+
+
+Assert.AreEqual(10, sendStats.DataBytesSent)
 Assert.AreEqual(10, socketMonitor.BytesReceived)
 Assert.AreEqual(10, socketMonitor.MessagesReceived)
