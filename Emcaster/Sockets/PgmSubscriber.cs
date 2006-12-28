@@ -21,7 +21,7 @@ namespace Emcaster.Sockets
         private PgmSocket _socket;
         private int _receiveBufferSize = 1024*128;
         private int _readBuffer=1024*128;
-
+   
         public PgmSubscriber(string address, int port)
         {
             _socket = new PgmSocket();
@@ -49,27 +49,12 @@ namespace Emcaster.Sockets
             set { _readBuffer = (value * 1024); }
         }
 
-
-        private static void SetSocketOption(Socket socket, string name, int option, ulong val)
-        {
-            try
-            {
-                byte[] bits = BitConverter.GetBytes(val);
-                PgmSocket.SetPgmOption(socket, option, bits);
-                log.Info("Set: " + name + " Option : " + option + " value: " + val);
-            }
-            catch (Exception failed)
-            {
-                log.Debug(name + " Option : " + option + " value: " + val, failed);
-            }
-        }
-
         public void Start()
         {
             IPAddress ipAddr = IPAddress.Parse(_ip);
             IPEndPoint end = new IPEndPoint(ipAddr, _port);
             _socket.Bind(end);
-
+            _socket.ApplySocketOptions();
             EnableGigabit(_socket);
             _socket.Listen(5);
             log.Info("Listening: " + end);
@@ -78,7 +63,7 @@ namespace Emcaster.Sockets
 
         private static void EnableGigabit(Socket socket)
         {
-            SetSocketOption(socket, "Gigabit", 1014, 1);
+            PgmSocket.SetSocketOption(socket, "Gigabit", 1014, 1);
         }
 
         private void RunAccept(object state)
