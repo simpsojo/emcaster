@@ -1,8 +1,11 @@
-
 = Introduction =
 
-Emcaster is a reliable multicast library written in c#.
+Emcaster is a reliable multicast library written in c#. It uses Pragmatic General Multicast (PGM) for peer to peer reliable multicast.
 
+= Dependencies =
+
+* .NET 2.0
+* MSMQ 3.0
 
 = Example =
 
