@@ -4,8 +4,9 @@ Emcaster is a reliable multicast library written in c#. It uses Pragmatic Genera
 
 = Dependencies =
 
-* .NET 2.0
-* MSMQ 3.0
+  * [http://www.microsoft.com/net/default.mspx .NET 2.0]
+  * [http://www.microsoft.com/windowsserver2003/technologies/msmq/default.mspx MSMQ 3.0]
+  * Windows 2000, Windows 2003, Windows XP
 
 = Example =
 
