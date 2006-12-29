@@ -8,6 +8,10 @@ Emcaster is a reliable multicast library written in c#. It uses Pragmatic Genera
   * [http://www.microsoft.com/windowsserver2003/technologies/msmq/default.mspx MSMQ 3.0]
   * Windows 2000, Windows 2003, Windows XP
 
+= Features =
+  * Topics with Regex based Matching
+  * Performance - > 100 thousand messages per second on commodity hardware
+
 = Example =
 
 {{{
