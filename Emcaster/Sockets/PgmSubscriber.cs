@@ -104,7 +104,7 @@ namespace Emcaster.Sockets
                         OnReceive onMsg = ReceiveEvent;
                         if (onMsg != null)
                         {
-                            ReceiveEvent(buffer, 0, read);
+                            onMsg(buffer, 0, read);
                         }
                         receiveSocket.Blocking = true;
                         read = receiveSocket.Receive(buffer, 0, _readBuffer, SocketFlags.None);

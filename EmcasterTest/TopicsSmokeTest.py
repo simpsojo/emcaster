@@ -46,7 +46,6 @@ Thread.Sleep(3000)
 sendSocket.Dispose()
 receiveSocket.Dispose()	
 
-
 Assert.AreEqual(10, len(msgsReceived))
 Assert.AreEqual(0, msgsReceived[0])
 Assert.AreEqual(9, msgsReceived[9])
