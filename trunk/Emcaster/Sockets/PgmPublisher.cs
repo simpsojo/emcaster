@@ -8,7 +8,7 @@ using Common.Logging;
 namespace Emcaster.Sockets
 {
  
-    public class PgmPublisher : IDisposable
+    public class PgmPublisher : IDisposable, IByteWriter
     {
    
         private static ILog log = LogManager.GetLogger(typeof(PgmPublisher));
@@ -37,9 +37,10 @@ namespace Emcaster.Sockets
             _socket.Connect(end);
         }
 
-        public void Write(byte[] data, int offset, int length)
+        public bool Write(byte[] data, int offset, int length)
         {
             _socket.Send(data, offset, length, SocketFlags.None);
+            return true;
         }
 
         public int Publish(params byte[] dataToPublish)

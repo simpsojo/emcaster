@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Net.Sockets;
 using System.Threading;
 using Common.Logging;
 
@@ -17,12 +18,17 @@ namespace Emcaster.Sockets
 
         private MemoryStream _pendingBuffer;
         private MemoryStream _flushBuffer;
-        private Stream _target;
+        private Socket _target;
         private bool _running = true;
         private int _minFlushSize = 100;
         private int _sleepOnMin = 1;
 
-        public AsyncByteWriter(Stream target, int maxBufferSize)
+        public AsyncByteWriter(PgmPublisher pubber, int maxBufferSize)
+            :this(pubber.Socket, maxBufferSize)
+        {
+        }
+
+        public AsyncByteWriter(Socket target, int maxBufferSize)
         {
             _target = target;
             _pendingBuffer = new MemoryStream(maxBufferSize);
@@ -89,7 +95,8 @@ namespace Emcaster.Sockets
             {
                 try
                 {
-                    _flushBuffer.WriteTo(_target);
+                    byte[] allData = _flushBuffer.ToArray();
+                    _target.Send(allData);
                     log.Debug(GetType().Name + " Flushed " + _flushBuffer.Length);
                 }
                 catch (Exception failed)
