@@ -65,9 +65,9 @@ namespace Emcaster.Topics
             _buffer = buffer;
             _offset = 0;
             _topic = null;
-            _object = null;
             while (_offset < received)
             {
+                _object = null;
                 fixed (byte* pByte = &_buffer[_offset])
                 {
                     OnTopicMessage msg = MessageEvent;
