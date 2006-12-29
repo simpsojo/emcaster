@@ -1,0 +1,54 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+using NUnit.Framework;
+using System.IO;
+using Emcaster.Topics;
+using Rhino.Mocks;
+using Emcaster.Sockets;
+
+namespace EmcasterTest.Topics
+{
+    [TestFixture]
+    public class TopicPublisherTests
+    {
+        public delegate bool WriteDelegate(byte[] data, int offset, int length);
+
+        [Test]
+        public void PublishBytes()
+        {
+            IList<object> received = new List<object>();
+            TopicSubscriber subscriber = new TopicSubscriber("AAPL");
+            subscriber.TopicMessageEvent += delegate(IMessageParser parser)
+            {
+                received.Add(parser.ParseObject());
+            };
+            WriteDelegate doMessage = delegate(byte[] data, int offset, int length)
+            {
+                MessageParser parser = new MessageParser(data);
+                parser.MessageEvent += subscriber.OnTopicMessage;
+                parser.ParseBytesInBuffer(data.Length);
+                return true;
+            };
+            MockRepository mocks = new MockRepository();
+            IByteWriter writer = (IByteWriter)mocks.CreateMock(typeof(IByteWriter));
+            writer.Start();
+            writer.Write(null, 0, 55);
+            LastCall.IgnoreArguments().Do(doMessage);
+            writer.Write(null, 0, 55);
+            LastCall.IgnoreArguments().Do(doMessage);
+      
+            mocks.ReplayAll();
+            
+            TopicPublisher pubber = new TopicPublisher(writer);
+            pubber.Start();
+            pubber.PublishObject("AAPL", "80.54");
+
+            Assert.AreEqual(1, received.Count);
+            Assert.AreEqual("80.54", received[0]);
+
+            pubber.PublishObject("MSFT", "34.43");
+            Assert.AreEqual(1, received.Count);
+        }
+    }
+}

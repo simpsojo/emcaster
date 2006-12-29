@@ -37,6 +37,11 @@ namespace Emcaster.Sockets
             _socket.Connect(end);
         }
 
+        public void Write(byte[] data, int offset, int length)
+        {
+            _socket.Send(data, offset, length, SocketFlags.None);
+        }
+
         public int Publish(params byte[] dataToPublish)
         {
             return _socket.Send(dataToPublish);
