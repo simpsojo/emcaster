@@ -16,6 +16,11 @@ msgsReceived = []
 receiveSocket = PgmSubscriber("224.0.0.23", 40001)
 msgParser = MessageParser()
 receiveSocket.ReceiveEvent += msgParser.ParseBytes
+
+def print_packet(arg1, arg2, arg3):
+	print "packet: ", arg3
+receiveSocket.ReceiveEvent += print_packet
+
 topicSubscriber = TopicSubscriber("MSFT")
 msgParser.MessageEvent += topicSubscriber.OnTopicMessage
 receiveSocket.Start()
@@ -35,7 +40,8 @@ Thread.Sleep(1000)
 
 for x in xrange(10):
 	topicPublisher.PublishObject("MSFT", x)
-	Thread.Sleep(1000)
+
+Thread.Sleep(3000)
 
 sendSocket.Dispose()
 receiveSocket.Dispose()	
