@@ -23,11 +23,13 @@ namespace EmcasterTest.Topics
             {
                 received.Add(parser.ParseObject());
             };
+         
             WriteDelegate doMessage = delegate(byte[] data, int offset, int length)
             {
-                MessageParser parser = new MessageParser(data);
+                MessageParser parser = new MessageParser();
                 parser.MessageEvent += subscriber.OnTopicMessage;
-                parser.ParseBytesInBuffer(data.Length);
+   
+                parser.ParseBytes(data, offset, length);
                 return true;
             };
             MockRepository mocks = new MockRepository();
