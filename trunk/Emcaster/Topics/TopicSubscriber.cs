@@ -7,7 +7,7 @@ namespace Emcaster.Topics
 {
     public delegate void OnTopicMessage(IMessageParser parser);
 
-    public class TopicSubscriber
+    public class TopicSubscriber: IDisposable
     {
         public event OnTopicMessage TopicMessageEvent;
 
@@ -26,6 +26,11 @@ namespace Emcaster.Topics
         }
 
         public void Stop()
+        {
+            Dispose();
+        }
+
+        public void Dispose()
         {
             _msgEvent.MessageEvent -= OnTopicMessage;
         }
