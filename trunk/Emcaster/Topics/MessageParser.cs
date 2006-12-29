@@ -6,19 +6,14 @@ namespace Emcaster.Topics
 {
     public class MessageParser: IMessageParser
     {
-        public OnTopicMessage MessageEvent;
+        public event OnTopicMessage MessageEvent;
 
-        private readonly byte[] _buffer;
         private string _topic;
         private object _object;
         private int _offset;
+        private byte[] _buffer;
   
    
-        public MessageParser(byte[] buffer)
-        {
-            _buffer = buffer;
-        }
-
         private unsafe int ParseTopicSize()
         {
             fixed (byte* pHeader = &_buffer[0])
@@ -65,17 +60,9 @@ namespace Emcaster.Topics
             return _object;
         }
 
-        public unsafe void ReadNext(Socket target)
+        public unsafe void ParseBytes(byte[] buffer, int offset, int received)
         {
-            int received = target.Receive(_buffer, _buffer.Length, SocketFlags.None);
-            if (received < 1)
-            {
-                return;
-            }
-            ParseBytesInBuffer(received);
-        }
-        public unsafe void ParseBytesInBuffer(int received)
-        {
+            _buffer = buffer;
             _offset = 0;
             _topic = null;
             _object = null;
