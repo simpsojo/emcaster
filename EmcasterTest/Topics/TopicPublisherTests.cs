@@ -18,17 +18,16 @@ namespace EmcasterTest.Topics
         public void PublishBytes()
         {
             IList<object> received = new List<object>();
-            TopicSubscriber subscriber = new TopicSubscriber("AAPL");
-            subscriber.TopicMessageEvent += delegate(IMessageParser parser)
+            MessageParser parser = new MessageParser();
+            TopicSubscriber subscriber = new TopicSubscriber("AAPL", parser);
+            subscriber.Start();
+            subscriber.TopicMessageEvent += delegate(IMessageParser msgParser)
             {
-                received.Add(parser.ParseObject());
+                received.Add(msgParser.ParseObject());
             };
          
             WriteDelegate doMessage = delegate(byte[] data, int offset, int length)
             {
-                MessageParser parser = new MessageParser();
-                parser.MessageEvent += subscriber.OnTopicMessage;
-   
                 parser.ParseBytes(data, offset, length);
                 return true;
             };

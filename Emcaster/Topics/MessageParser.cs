@@ -4,7 +4,12 @@ using System.IO;
 
 namespace Emcaster.Topics
 {
-    public class MessageParser: IMessageParser
+    public interface IMessageEvent
+    {
+        event OnTopicMessage MessageEvent;
+    }
+
+    public class MessageParser: IMessageParser, IMessageEvent
     {
         public event OnTopicMessage MessageEvent;
 

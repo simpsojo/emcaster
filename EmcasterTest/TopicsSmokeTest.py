@@ -21,8 +21,8 @@ def print_packet(arg1, arg2, arg3):
 	print "packet: ", arg3
 receiveSocket.ReceiveEvent += print_packet
 
-topicSubscriber = TopicSubscriber("MSFT")
-msgParser.MessageEvent += topicSubscriber.OnTopicMessage
+topicSubscriber = TopicSubscriber("MSFT", msgParser)
+topicSubscriber.Start()
 receiveSocket.Start()
 def OnMsg(msg):
 	msgsReceived.append(msg.ParseObject())
