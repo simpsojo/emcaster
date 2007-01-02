@@ -1,23 +1,25 @@
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using System.Text;
+
+using Emcaster.Sockets;
 
 namespace Emcaster.Topics
 {
-    public interface IMessageEvent
+    public class MessageParser: IMessageParser, IByteParser
     {
-        event OnTopicMessage MessageEvent;
-    }
-
-    public class MessageParser: IMessageParser, IMessageEvent
-    {
-        public event OnTopicMessage MessageEvent;
-
+        private readonly Decoder _decoder = Encoding.UTF8.GetDecoder();
         private string _topic;
         private object _object;
         private int _offset;
         private byte[] _buffer;
-  
+        private readonly IMessageListener _listener;
+
+        public MessageParser(IMessageListener listener)
+        {
+            _listener = listener;
+        }
    
         private unsafe int ParseTopicSize()
         {
@@ -65,6 +67,12 @@ namespace Emcaster.Topics
             return _object;
         }
 
+        public void OnBytes(byte[] data, int offset, int length)
+        {
+            ParseBytes(data, offset, length);
+        }
+    
+
         public unsafe void ParseBytes(byte[] buffer, int offset, int received)
         {
             _buffer = buffer;
@@ -75,12 +83,8 @@ namespace Emcaster.Topics
                 _object = null;
                 fixed (byte* pByte = &_buffer[_offset])
                 {
-                    OnTopicMessage msg = MessageEvent;
                     int msgSize = TopicPublisher.HEADER_SIZE + ParseTopicSize() + ParseBodySize();
-                    if (msg != null)
-                    {
-                        msg(this);
-                    }
+                    _listener.OnMessage(this);
                     _offset += msgSize;
                 }
             }
