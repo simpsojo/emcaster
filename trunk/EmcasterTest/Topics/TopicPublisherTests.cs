@@ -35,21 +35,21 @@ namespace EmcasterTest.Topics
             MockRepository mocks = new MockRepository();
             IByteWriter writer = (IByteWriter)mocks.CreateMock(typeof(IByteWriter));
             writer.Start();
-            writer.Write(null, 0, 55);
+            writer.Write(null, 0, 55, 1);
             LastCall.IgnoreArguments().Do(doMessage);
-            writer.Write(null, 0, 55);
+            writer.Write(null, 0, 55, 1);
             LastCall.IgnoreArguments().Do(doMessage);
       
             mocks.ReplayAll();
             
             TopicPublisher pubber = new TopicPublisher(writer);
             pubber.Start();
-            pubber.PublishObject("AAPL", "80.54");
+            pubber.PublishObject("AAPL", "80.54", 1);
 
             Assert.AreEqual(1, received.Count);
             Assert.AreEqual("80.54", received[0]);
 
-            pubber.PublishObject("MSFT", "34.43");
+            pubber.PublishObject("MSFT", "34.43", 1);
             Assert.AreEqual(1, received.Count);
         }
     }

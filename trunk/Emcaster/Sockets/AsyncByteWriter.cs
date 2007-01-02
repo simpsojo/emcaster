@@ -20,8 +20,8 @@ namespace Emcaster.Sockets
         private MemoryStream _flushBuffer;
         private Socket _target;
         private bool _running = true;
-        private int _minFlushSize = 100;
-        private int _sleepOnMin = 1;
+        private int _minFlushSize = 1024;
+        private int _sleepOnMin = 5;
 
         public AsyncByteWriter(PgmSource pubber, int maxBufferSize)
             :this(pubber.Socket, maxBufferSize)
@@ -53,13 +53,16 @@ namespace Emcaster.Sockets
         /// <param name="offset"></param>
         /// <param name="size"></param>
         /// <returns>true if bytes are bufferred. false if the wait times out.</returns>
-        public bool Write(byte[] buffer, int offset, int size)
+        public bool Write(byte[] buffer, int offset, int size, int waitMs)
         {
             lock (_lock)
             {
-                if ((_pendingBuffer.Length + size) > _pendingBuffer.Capacity && _running)
+                while ((_pendingBuffer.Length + size) > _pendingBuffer.Capacity && _running)
                 {
-                    return false;
+                    if (!Monitor.Wait(_lock, waitMs))
+                    {
+                        return false;
+                    }
                 }
                 if (!_running)
                     return false;
