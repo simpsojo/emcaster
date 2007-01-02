@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Net.Sockets;
 using Common.Logging;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.InteropServices;
+
 
 namespace Emcaster.Sockets
 {
@@ -27,7 +30,14 @@ namespace Emcaster.Sockets
 
         public void SetPgmOption(int option, byte[] value)
         {
-            SetSocketOption(PGM_LEVEL, (SocketOptionName)option, value);
+            try
+            {
+                SetSocketOption(PGM_LEVEL, (SocketOptionName)option, value);
+            }
+            catch (Exception failed)
+            {
+                log.Warn("failed", failed);
+            }
         }
 
         public void AddSocketOption(int opt, ulong val)
@@ -62,6 +72,19 @@ namespace Emcaster.Sockets
             }
         }
 
+
+        public static byte[] ConvertStructToBytes(object obj)
+        {
+            int structSize = Marshal.SizeOf(obj);
+            byte[] allData = new byte[structSize];
+            GCHandle handle =
+                GCHandle.Alloc(allData, GCHandleType.Pinned);
+            Marshal.StructureToPtr(obj,
+                handle.AddrOfPinnedObject(),
+                false);
+            handle.Free();
+            return allData;
+        }
 
   
     }

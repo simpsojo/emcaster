@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+
 using Common.Logging;
 
 namespace Emcaster.Sockets
@@ -15,29 +16,69 @@ namespace Emcaster.Sockets
  
         private readonly string _ip;
         private readonly int _port;
-        private readonly PgmSocket _socket;
+        private readonly Socket _socket;
+        private int _sendSocketSize = 1024 * 1024;
+
+        private uint _rateKbitsPerSec = 1024 * 10;
+        private uint _windowSizeInMSecs;
+        private uint _windowSizeInBytes = 1000*1000*10;
  
         public PgmSource(string address, int port)
         {
-            _socket = new PgmSocket();
+            _socket = new Socket(AddressFamily.InterNetwork, SocketType.Rdm, PgmSocket.PGM_PROTOCOL_TYPE);
             _ip = address;
             _port = port;
         }
 
-        public PgmSocket Socket
+        public uint RateKbitsPerSec
+        {
+            set { _rateKbitsPerSec = value; }
+            get { return _rateKbitsPerSec; }
+        }
+
+        public uint WindowSizeInMSecs
+        {
+            set { _windowSizeInMSecs = value; }
+            get { return _windowSizeInMSecs; }
+        }
+
+        public uint WindowSizeinBytes
+        {
+            set { _windowSizeInBytes = value; }
+            get { return _windowSizeInBytes; }
+        }
+
+        public int SocketBufferSize
+        {
+            set
+            {
+                _sendSocketSize = value;
+            }
+            get
+            {
+                return _sendSocketSize;
+            }
+        }
+
+        public Socket Socket
         {
             get { return _socket; }
         }
 
-  
+     
         public void Start()
         {
             IPAddress ipAddr = IPAddress.Parse(_ip);
             IPEndPoint end = new IPEndPoint(ipAddr, _port);
+            _socket.SendBufferSize = _sendSocketSize;
+            IPAddress local = IPAddress.Parse("192.168.1.101");
+            _socket.Bind(new IPEndPoint(IPAddress.Any, 0));
+            SetSendWindow();
             _socket.Connect(end);
+            
         }
 
-        public bool Write(byte[] data, int offset, int length)
+        public bool Write(byte[] data, int offset, int length, int msWaitIgnored)
         {
             _socket.Send(data, offset, length, SocketFlags.None);
             return true;
@@ -60,7 +101,28 @@ namespace Emcaster.Sockets
                 log.Warn("close failed", failed);
             }
         }
-        
+
+        public unsafe void SetSendWindow()
+        {
+            _RM_SEND_WINDOW window = new _RM_SEND_WINDOW();
+            window.RateKbitsPerSec = RateKbitsPerSec;
+            window.WindowSizeInMSecs = WindowSizeInMSecs;
+            window.WindowSizeInBytes = WindowSizeinBytes;
+            byte[] allData = PgmSocket.ConvertStructToBytes(window);
+            _socket.SetSocketOption(PgmSocket.PGM_LEVEL, (SocketOptionName)1001, allData);
+        }
+
+
+        public unsafe _RM_SEND_WINDOW GetSendWindow()
+        {
+            int size = sizeof(_RM_SEND_WINDOW);
+            byte[] data = _socket.GetSocketOption(PgmSocket.PGM_LEVEL, (SocketOptionName)1001, size);
+            fixed (byte* pBytes = &data[0])
+            {
+                return *((_RM_SEND_WINDOW*)pBytes);
+            }
+        }
+
         public unsafe _RM_SENDER_STATS GetSenderStats()
         {
             int size = sizeof(_RM_SENDER_STATS);
@@ -71,21 +133,5 @@ namespace Emcaster.Sockets
             }
         }
     }
-
-    public struct _RM_SENDER_STATS
-    {
-        public ulong DataBytesSent;          // # client data bytes sent out so far
-        public ulong TotalBytesSent;         // SPM, OData and RData bytes
-        public ulong NaksReceived;           // # NAKs received so far
-        public ulong NaksReceivedTooLate;    // # NAKs recvd after window advanced
-        public ulong NumOutstandingNaks;     // # NAKs yet to be responded to
-        public ulong NumNaksAfterRData;      // # NAKs yet to be responded to
-        public ulong RepairPacketsSent;      // # Repairs (RDATA) sent so far
-        public ulong BufferSpaceAvailable;   // # partial messages dropped
-        public ulong TrailingEdgeSeqId;      // smallest (oldest) Sequence Id in the window
-        public ulong LeadingEdgeSeqId;       // largest (newest) Sequence Id in the window
-        public ulong RateKBitsPerSecOverall; // Internally calculated send-rate from the beginning
-        public ulong RateKBitsPerSecLast;    // Send-rate calculated every INTERNAL_RATE_CALCULATION_FREQUENCY
-    } 
 
 }

@@ -25,10 +25,10 @@ namespace Emcaster.Topics
             _writer.Start();
         }
 
-        public void PublishObject(string topic, object data)
+        public void PublishObject(string topic, object data, int msToWaitForWriteLock)
         {
             byte[] allData = ToBytes(data);
-            Publish(topic, allData, 0, allData.Length); 
+            Publish(topic, allData, 0, allData.Length, msToWaitForWriteLock); 
         }
 
         private static byte[] ToBytes(object obj)
@@ -39,7 +39,7 @@ namespace Emcaster.Topics
             return outputStream.ToArray();
         }
 
-        public unsafe void Publish(string topic, byte[] data, int offset, int length)
+        public unsafe void Publish(string topic, byte[] data, int offset, int length, int msToWaitForWriteLock)
         {
             byte[] topicBytes = ToBytes(topic);
             MessageHeader header = new MessageHeader(topicBytes.Length, length);
@@ -54,7 +54,7 @@ namespace Emcaster.Topics
             handle.Free();
             System.Array.Copy(topicBytes, 0, allData, headerSize, topicBytes.Length);
             System.Array.Copy(data, offset, allData, headerSize + topicBytes.Length, length);
-            _writer.Write(allData, 0, totalSize);
+            _writer.Write(allData, 0, totalSize, msToWaitForWriteLock);
         }
     }
 }

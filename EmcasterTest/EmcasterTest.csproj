@@ -48,6 +48,9 @@
     <Compile Include="Topics\TopicPublisherTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="TopicPublisher.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="SmokeTest.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
