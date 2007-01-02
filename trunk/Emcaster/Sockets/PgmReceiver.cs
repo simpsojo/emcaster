@@ -9,24 +9,23 @@ namespace Emcaster.Sockets
 {
     public delegate void OnReceive(byte[] data, int offset, int length);
 
-    public class PgmSubscriber : IDisposable
+    public class PgmReceiver : IDisposable
     {
-        public event OnReceive ReceiveEvent;
-
-        private static ILog log = LogManager.GetLogger(typeof(PgmSubscriber));
+ 
+        private static ILog log = LogManager.GetLogger(typeof(PgmReceiver));
  
         private bool _running = true;
         private string _ip;
         private int _port;
         private PgmSocket _socket;
-        private int _receiveBufferSize = 1024*128;
-        private int _readBuffer=1024*128;
+        private ISourceReader _reader;
    
-        public PgmSubscriber(string address, int port)
+        public PgmReceiver(string address, int port, ISourceReader reader)
         {
             _socket = new PgmSocket();
             _ip = address;
             _port = port;
+            _reader = reader;
         }
 
         public string Address
@@ -39,16 +38,7 @@ namespace Emcaster.Sockets
             set { _port = value; }
         }
 
-        public int ReceiveBuffer
-        {
-            set { _receiveBufferSize = (value * 1024); }
-        }
-
-        public int ReadBuffer
-        {
-            set { _readBuffer = (value * 1024); }
-        }
-
+   
         public void Start()
         {
             IPAddress ipAddr = IPAddress.Parse(_ip);
@@ -61,7 +51,7 @@ namespace Emcaster.Sockets
             ThreadPool.QueueUserWorkItem(RunAccept);
         }
 
-        private static void EnableGigabit(Socket socket)
+        internal static void EnableGigabit(Socket socket)
         {
             PgmSocket.SetSocketOption(socket, "Gigabit", 1014, 1);
         }
@@ -88,33 +78,7 @@ namespace Emcaster.Sockets
 
         private void RunReceiver(Socket receiveSocket)
         {
-            using (receiveSocket)
-            {
-                EnableGigabit(receiveSocket);
-                if (_receiveBufferSize > 0)
-                {
-                    receiveSocket.ReceiveBufferSize = _receiveBufferSize;
-                }
-                byte[] buffer = new byte[_readBuffer];
-                try
-                {
-                    int read = receiveSocket.Receive(buffer, 0, _readBuffer, SocketFlags.None);
-                    while (read > 0 && _running)
-                    {
-                        OnReceive onMsg = ReceiveEvent;
-                        if (onMsg != null)
-                        {
-                            onMsg(buffer, 0, read);
-                        }
-                        receiveSocket.Blocking = true;
-                        read = receiveSocket.Receive(buffer, 0, _readBuffer, SocketFlags.None);
-                    }
-                }
-                catch (Exception failed)
-                {
-                    log.Info("Closing", failed);
-                }
-            }
+            _reader.AcceptSocket(receiveSocket, ref _running);
         }
 
         public void Dispose()

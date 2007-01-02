@@ -8,16 +8,16 @@ using Common.Logging;
 namespace Emcaster.Sockets
 {
  
-    public class PgmPublisher : IDisposable, IByteWriter
+    public class PgmSource : IDisposable, IByteWriter
     {
    
-        private static ILog log = LogManager.GetLogger(typeof(PgmPublisher));
+        private static ILog log = LogManager.GetLogger(typeof(PgmSource));
  
         private readonly string _ip;
         private readonly int _port;
         private readonly PgmSocket _socket;
  
-        public PgmPublisher(string address, int port)
+        public PgmSource(string address, int port)
         {
             _socket = new PgmSocket();
             _ip = address;

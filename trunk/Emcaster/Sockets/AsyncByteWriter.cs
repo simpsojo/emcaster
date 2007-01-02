@@ -23,7 +23,7 @@ namespace Emcaster.Sockets
         private int _minFlushSize = 100;
         private int _sleepOnMin = 1;
 
-        public AsyncByteWriter(PgmPublisher pubber, int maxBufferSize)
+        public AsyncByteWriter(PgmSource pubber, int maxBufferSize)
             :this(pubber.Socket, maxBufferSize)
         {
         }
