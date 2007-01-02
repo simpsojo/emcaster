@@ -18,8 +18,9 @@ namespace EmcasterTest.Topics
         public void PublishBytes()
         {
             IList<object> received = new List<object>();
-            MessageParser parser = new MessageParser();
-            TopicSubscriber subscriber = new TopicSubscriber("AAPL", parser);
+            MessageParserFactory msgEvent = new MessageParserFactory();
+            MessageParser parser = new MessageParser(msgEvent);
+            TopicSubscriber subscriber = new TopicSubscriber("AAPL", msgEvent);
             subscriber.Start();
             subscriber.TopicMessageEvent += delegate(IMessageParser msgParser)
             {

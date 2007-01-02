@@ -13,13 +13,9 @@ from NUnit.Framework import *
 Startup.Init();
 
 msgsReceived = []
-receiveSocket = PgmSubscriber("224.0.0.23", 40001)
-msgParser = MessageParser()
-receiveSocket.ReceiveEvent += msgParser.ParseBytes
-
-def print_packet(arg1, arg2, arg3):
-	print "packet: ", arg3
-receiveSocket.ReceiveEvent += print_packet
+msgParser = MessageParserFactory()
+reader = SourceReader(msgParser)
+receiveSocket = PgmReceiver("224.0.0.23", 40001, reader)
 
 topicSubscriber = TopicSubscriber("MSFT", msgParser)
 topicSubscriber.Start()
@@ -30,7 +26,7 @@ def OnMsg(msg):
 topicSubscriber.TopicMessageEvent += OnMsg
 
 
-sendSocket = PgmPublisher("224.0.0.23", 40001)
+sendSocket = PgmSource("224.0.0.23", 40001)
 sendSocket.Start()
 asyncWriter = AsyncByteWriter(sendSocket, 1024*64)
 topicPublisher = TopicPublisher(asyncWriter);

@@ -11,15 +11,17 @@ from NUnit.Framework import *
 
 Startup.Init();
 
-receiveSocket = PgmSubscriber("224.0.0.23", 40001)
+parser = ByteParser()
+reader = SourceReader(parser)
+receiveSocket = PgmReceiver("224.0.0.23", 40001, reader)
 
 socketMonitor = SocketMonitor();
 
-receiveSocket.ReceiveEvent += socketMonitor.OnReceive
+parser.ReceiveEvent += socketMonitor.OnReceive
 
 receiveSocket.Start()
 
-sendSocket = PgmPublisher("224.0.0.23", 40001)
+sendSocket = PgmSource("224.0.0.23", 40001)
 sendSocket.Start()
 
 Thread.Sleep(1000)
