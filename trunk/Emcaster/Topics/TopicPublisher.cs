@@ -3,6 +3,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.InteropServices;
 using System.Text;
+using System;
 
 namespace Emcaster.Topics
 {
@@ -41,22 +42,22 @@ namespace Emcaster.Topics
             return outputStream.ToArray();
         }
 
-        public unsafe void Publish(string topic, byte[] data, int offset, int length, int msToWaitForWriteLock)
-        {
-            byte[] topicBytes = _encoder.GetBytes(topic);
+        public static byte[] CreateMessage(string topic, byte[] data, int offset, int length, UTF8Encoding encoder){
+            byte[] topicBytes = encoder.GetBytes(topic);
             MessageHeader header = new MessageHeader(topicBytes.Length, length);
             int headerSize = Marshal.SizeOf(header);
             int totalSize = headerSize + header.TotalSize;
             byte[] allData = new byte[totalSize];
-            GCHandle handle =
-                GCHandle.Alloc(allData,GCHandleType.Pinned);
-            Marshal.StructureToPtr(header,
-                handle.AddrOfPinnedObject(),
-                false);
-            handle.Free();
-            System.Array.Copy(topicBytes, 0, allData, headerSize, topicBytes.Length);
-            System.Array.Copy(data, offset, allData, headerSize + topicBytes.Length, length);
-            _writer.Write(allData, 0, totalSize, msToWaitForWriteLock);
+            header.WriteToBuffer(allData, 0);
+            Array.Copy(topicBytes, 0, allData, headerSize, topicBytes.Length);
+            Array.Copy(data, offset, allData, headerSize + topicBytes.Length, length);
+            return allData;
+        }
+
+        public unsafe void Publish(string topic, byte[] data, int offset, int length, int msToWaitForWriteLock)
+        {
+            byte[] allData = CreateMessage(topic, data, offset, length, _encoder);
+            _writer.Write(allData, 0, allData.Length, msToWaitForWriteLock);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Emcaster.Topics
         private string _topic;
         private object _object;
         private int _offset;
+
         private byte[] _buffer;
         private readonly IMessageListener _listener;
 
@@ -75,9 +76,9 @@ namespace Emcaster.Topics
         {
             _buffer = buffer;
             _offset = 0;
-            _topic = null;
             while (_offset < received)
             {
+                _topic = null;
                 _object = null;
                 fixed (byte* pByte = &_buffer[_offset])
                 {
