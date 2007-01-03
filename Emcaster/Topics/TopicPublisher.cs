@@ -2,11 +2,13 @@ using Emcaster.Sockets;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Emcaster.Topics
 {
     public class TopicPublisher
     {
+        private readonly UTF8Encoding _encoder = new UTF8Encoding();
         private readonly IByteWriter _writer;
         public static readonly int HEADER_SIZE = CalculateHeaderSize();
 
@@ -41,7 +43,7 @@ namespace Emcaster.Topics
 
         public unsafe void Publish(string topic, byte[] data, int offset, int length, int msToWaitForWriteLock)
         {
-            byte[] topicBytes = ToBytes(topic);
+            byte[] topicBytes = _encoder.GetBytes(topic);
             MessageHeader header = new MessageHeader(topicBytes.Length, length);
             int headerSize = Marshal.SizeOf(header);
             int totalSize = headerSize + header.TotalSize;

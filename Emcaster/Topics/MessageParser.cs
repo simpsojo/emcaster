@@ -9,7 +9,7 @@ namespace Emcaster.Topics
 {
     public class MessageParser: IMessageParser, IByteParser
     {
-        private readonly Decoder _decoder = Encoding.UTF8.GetDecoder();
+        private readonly UTF8Encoding _decoder = new UTF8Encoding();
         private string _topic;
         private object _object;
         private int _offset;
@@ -45,9 +45,7 @@ namespace Emcaster.Topics
                 if (_topic == null)
                 {
                     int topicSize = ParseTopicSize();
-                    BinaryFormatter formatter = new BinaryFormatter();
-                    MemoryStream stream = new MemoryStream(_buffer, TopicPublisher.HEADER_SIZE, topicSize);
-                    _topic = (string)formatter.Deserialize(stream);
+                    _topic = _decoder.GetString(_buffer, TopicPublisher.HEADER_SIZE, topicSize);
                 }
                 return _topic;
             }
