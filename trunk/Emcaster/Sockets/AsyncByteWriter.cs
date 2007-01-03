@@ -16,8 +16,8 @@ namespace Emcaster.Sockets
 
         private object _lock = new object();
 
-        private MemoryStream _pendingBuffer;
-        private MemoryStream _flushBuffer;
+        private ByteBuffer _pendingBuffer;
+        private ByteBuffer _flushBuffer;
         private Socket _target;
         private bool _running = true;
         private int _minFlushSize = 1024 * 10;
@@ -31,8 +31,8 @@ namespace Emcaster.Sockets
         public AsyncByteWriter(Socket target, int maxBufferSizeInBytes)
         {
             _target = target;
-            _pendingBuffer = new MemoryStream(maxBufferSizeInBytes);
-            _flushBuffer = new MemoryStream(maxBufferSizeInBytes);
+            _pendingBuffer = new ByteBuffer(maxBufferSizeInBytes);
+            _flushBuffer = new ByteBuffer(maxBufferSizeInBytes);
         }
 
         public int SleepOnMin
@@ -87,7 +87,7 @@ namespace Emcaster.Sockets
                 {
                     return;
                 }
-                MemoryStream swap = _flushBuffer;
+                ByteBuffer swap = _flushBuffer;
                 _flushBuffer = _pendingBuffer;
                 _pendingBuffer = swap;
                 // there may be many threads waiting to add to the buffer.
@@ -98,15 +98,13 @@ namespace Emcaster.Sockets
             {
                 try
                 {
-                    byte[] allData = _flushBuffer.ToArray();
-                    _target.Send(allData);
+                    _flushBuffer.WriteTo(_target, SocketFlags.None);
                 }
                 catch (Exception failed)
                 {
                     log.Error("Async Flush Failed msg: " + failed.Message + " stack: " + failed.StackTrace);
                 }
-                _flushBuffer.Position = 0;
-                _flushBuffer.SetLength(0);
+                _flushBuffer.Reset();
                 if (length < _minFlushSize)
                 {
                     Thread.Sleep(_sleepOnMin);
