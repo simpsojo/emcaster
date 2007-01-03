@@ -12,7 +12,7 @@ namespace Emcaster.Sockets
 
         private readonly IByteParserFactory _parserFactory;
 
-        private int _receiveBufferSize = 1024 * 128 * 10;
+        private int _receiveBufferSize = 1024 * 1024;
         private int _readBuffer = 1024 * 128;
 
 

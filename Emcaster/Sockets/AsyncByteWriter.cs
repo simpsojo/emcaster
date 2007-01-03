@@ -109,10 +109,6 @@ namespace Emcaster.Sockets
                 {
                     Thread.Sleep(_sleepOnMin);
                 }
-                else
-                {
-                    Thread.Sleep(0);
-                }
             }
         }
 
