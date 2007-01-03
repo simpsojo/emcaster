@@ -33,7 +33,7 @@ namespace Emcaster.Topics
             get { return _topicSize + _bodySize; }
         }
 
-        public unsafe void WriteToBuffer(byte[] allData, int p)
+        public unsafe void WriteToBuffer(byte[] allData)
         {
             GCHandle handle = GCHandle.Alloc(allData, GCHandleType.Pinned);
             Marshal.StructureToPtr(this,
