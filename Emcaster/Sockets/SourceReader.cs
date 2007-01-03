@@ -12,7 +12,7 @@ namespace Emcaster.Sockets
 
         private readonly IByteParserFactory _parserFactory;
 
-        private int _receiveBufferSize = 1024 * 128;
+        private int _receiveBufferSize = 1024 * 128 * 10;
         private int _readBuffer = 1024 * 128;
 
 
@@ -21,14 +21,14 @@ namespace Emcaster.Sockets
             _parserFactory = factory;
         }
 
-        public int ReceiveBuffer
+        public int ReceiveBufferInBytes
         {
-            set { _receiveBufferSize = (value * 1024); }
+            set { _receiveBufferSize = (value); }
         }
 
-        public int ReadBuffer
+        public int ReadBufferInBytes
         {
-            set { _readBuffer = (value * 1024); }
+            set { _readBuffer = (value); }
         }
 
 

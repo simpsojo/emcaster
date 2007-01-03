@@ -121,7 +121,7 @@ namespace Emcaster.Sockets
             }
         }
 
-        public unsafe void SetSendWindow()
+        private unsafe void SetSendWindow()
         {
             _RM_SEND_WINDOW window = new _RM_SEND_WINDOW();
             window.RateKbitsPerSec = RateKbitsPerSec;

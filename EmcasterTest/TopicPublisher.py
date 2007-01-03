@@ -18,9 +18,7 @@ sendSocket = PgmSource(address, port)
 sys.exitfunc = sendSocket.Dispose
 sendSocket.Start()
 
-asyncWriter = AsyncByteWriter(sendSocket, 1024*64)
-asyncWriter.SleepOnMin = 20
-asyncWriter.MinFlushSize = 1024*5
+asyncWriter = AsyncByteWriter(sendSocket, 1024*128)
 
 publisher = TopicPublisher(asyncWriter);
 publisher.Start()

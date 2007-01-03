@@ -20,19 +20,19 @@ namespace Emcaster.Sockets
         private MemoryStream _flushBuffer;
         private Socket _target;
         private bool _running = true;
-        private int _minFlushSize = 1024;
-        private int _sleepOnMin = 5;
+        private int _minFlushSize = 1024 * 10;
+        private int _sleepOnMin = 10;
 
-        public AsyncByteWriter(PgmSource pubber, int maxBufferSize)
-            :this(pubber.Socket, maxBufferSize)
+        public AsyncByteWriter(PgmSource pubber, int maxBufferSizeInBytes)
+            :this(pubber.Socket, maxBufferSizeInBytes)
         {
         }
 
-        public AsyncByteWriter(Socket target, int maxBufferSize)
+        public AsyncByteWriter(Socket target, int maxBufferSizeInBytes)
         {
             _target = target;
-            _pendingBuffer = new MemoryStream(maxBufferSize);
-            _flushBuffer = new MemoryStream(maxBufferSize);
+            _pendingBuffer = new MemoryStream(maxBufferSizeInBytes);
+            _flushBuffer = new MemoryStream(maxBufferSizeInBytes);
         }
 
         public int SleepOnMin
@@ -40,7 +40,7 @@ namespace Emcaster.Sockets
             set { _sleepOnMin = value; }
         }
 
-        public int MinFlushSize
+        public int MinFlushSizeInBytes
         {
             set { _minFlushSize = value; }
         }
