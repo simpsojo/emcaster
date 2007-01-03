@@ -26,6 +26,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Common.Logging, Version=1.1.0.2, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
@@ -45,6 +46,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SocketMonitor.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Topics\MessageHeaderTests.cs" />
+    <Compile Include="Topics\MessageParserTests.cs" />
     <Compile Include="Topics\TopicPublisherTests.cs" />
   </ItemGroup>
   <ItemGroup>

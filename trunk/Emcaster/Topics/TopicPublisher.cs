@@ -48,7 +48,7 @@ namespace Emcaster.Topics
             int headerSize = Marshal.SizeOf(header);
             int totalSize = headerSize + header.TotalSize;
             byte[] allData = new byte[totalSize];
-            header.WriteToBuffer(allData, 0);
+            header.WriteToBuffer(allData);
             Array.Copy(topicBytes, 0, allData, headerSize, topicBytes.Length);
             Array.Copy(data, offset, allData, headerSize + topicBytes.Length, length);
             return allData;

@@ -100,7 +100,6 @@ namespace Emcaster.Sockets
                 {
                     byte[] allData = _flushBuffer.ToArray();
                     _target.Send(allData);
-                    log.Debug(GetType().Name + " Flushed " + _flushBuffer.Length);
                 }
                 catch (Exception failed)
                 {
@@ -111,6 +110,10 @@ namespace Emcaster.Sockets
                 if (length < _minFlushSize)
                 {
                     Thread.Sleep(_sleepOnMin);
+                }
+                else
+                {
+                    Thread.Sleep(0);
                 }
             }
         }
