@@ -12,7 +12,7 @@ namespace EmcasterTest.Topics
     [TestFixture]
     public class TopicPublisherTests
     {
-        public delegate bool WriteDelegate(byte[] data, int offset, int length);
+        public delegate bool WriteDelegate(byte[] data, int offset, int length, int wait);
 
         [Test]
         public void PublishBytes()
@@ -27,7 +27,7 @@ namespace EmcasterTest.Topics
                 received.Add(msgParser.ParseObject());
             };
          
-            WriteDelegate doMessage = delegate(byte[] data, int offset, int length)
+            WriteDelegate doMessage = delegate(byte[] data, int offset, int length, int wait)
             {
                 parser.ParseBytes(data, offset, length);
                 return true;

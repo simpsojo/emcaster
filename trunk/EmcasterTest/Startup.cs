@@ -13,6 +13,11 @@ namespace EmcasterTest
             ConfigureLogging();
         }
 
+        public byte[] ToBytes(string data)
+        {
+            return new UTF8Encoding().GetBytes(data);
+        }
+
 
         public static void ConfigureLogging()
         {
