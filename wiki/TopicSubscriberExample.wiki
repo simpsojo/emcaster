@@ -1,6 +1,9 @@
 = Topic Subscriber=
 
 {{{
+using Emcaster.Sockets;
+using Emcaster.Topics;
+
 MessageParserFactory msgParser = new MessageParserFactory();
 SourceReader reader = new SourceReader(msgParser);
 PgmReceiver receiveSocket = new PgmReceiver("224.0.0.23", 7272, reader);
@@ -8,6 +11,5 @@ PgmReceiver receiveSocket = new PgmReceiver("224.0.0.23", 7272, reader);
 TopicSubscriber topicSubscriber = new TopicSubscriber("Stock-Quotes", msgParser);
 topicSubscriber.TopicMessageEvent += MyDelegateMethod;
 topicSubscriber.Start();
-monitor.Start();
 receiveSocket.Start();
 }}}
