@@ -17,7 +17,7 @@ namespace Emcaster.Sockets
         public static readonly ProtocolType PGM_PROTOCOL_TYPE = (ProtocolType)113;
         public static readonly SocketOptionLevel PGM_LEVEL = (SocketOptionLevel)PROTOCOL_TYPE_NUMBER;
 
-        private IDictionary<int, ulong> _socketOptions = new Dictionary<int, ulong>();
+        private IDictionary<int, uint> _socketOptions = new Dictionary<int, uint>();
 
         public PgmSocket(): base(AddressFamily.InterNetwork, SocketType.Rdm,PGM_PROTOCOL_TYPE) 
         {
@@ -40,17 +40,17 @@ namespace Emcaster.Sockets
             }
         }
 
-        public void AddSocketOption(int opt, ulong val)
+        public void AddSocketOption(int opt, uint val)
         {
             _socketOptions[opt] = val;
         }
 
-        public IDictionary<int, ulong> SocketOptions
+        public IDictionary<int, uint> SocketOptions
         {
             set { _socketOptions = value; }
         }
 
-        public void ApplySocketOptions()
+        internal void ApplySocketOptions()
         {
             foreach (int option in _socketOptions.Keys)
             {
@@ -72,6 +72,15 @@ namespace Emcaster.Sockets
             }
         }
 
+        public unsafe _RM_RECEIVER_STATS GetReceiverStats(Socket socket)
+        {
+            int size = sizeof(_RM_RECEIVER_STATS);
+            byte[] data = socket.GetSocketOption(PgmSocket.PGM_LEVEL, (SocketOptionName)1013, size);
+            fixed (byte* pBytes = &data[0])
+            {
+                return *((_RM_RECEIVER_STATS*)pBytes);
+            }
+        }
 
         public static byte[] ConvertStructToBytes(object obj)
         {
