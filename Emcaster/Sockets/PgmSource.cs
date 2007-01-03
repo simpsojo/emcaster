@@ -16,16 +16,19 @@ namespace Emcaster.Sockets
  
         private readonly string _ip;
         private readonly int _port;
-        private readonly Socket _socket;
+        private readonly PgmSocket _socket;
         private int _sendSocketSize = 1024 * 1024;
 
         private uint _rateKbitsPerSec = 1024 * 10;
         private uint _windowSizeInMSecs;
         private uint _windowSizeInBytes = 1000*1000*10;
- 
+
+        private int _bindPort;
+        private string _bindInterface;
+
         public PgmSource(string address, int port)
         {
-            _socket = new Socket(AddressFamily.InterNetwork, SocketType.Rdm, PgmSocket.PGM_PROTOCOL_TYPE);
+            _socket = new PgmSocket();
             _ip = address;
             _port = port;
         }
@@ -60,7 +63,19 @@ namespace Emcaster.Sockets
             }
         }
 
-        public Socket Socket
+        public string BindInterface
+        {
+            set { _bindInterface = value; }
+            get { return _bindInterface; }
+        }
+
+        public int BindPort
+        {
+            set { _bindPort = value; }
+            get { return _bindPort; }
+        }
+
+        public PgmSocket Socket
         {
             get { return _socket; }
         }
@@ -71,8 +86,12 @@ namespace Emcaster.Sockets
             IPAddress ipAddr = IPAddress.Parse(_ip);
             IPEndPoint end = new IPEndPoint(ipAddr, _port);
             _socket.SendBufferSize = _sendSocketSize;
-            IPAddress local = IPAddress.Parse("192.168.1.101");
-            _socket.Bind(new IPEndPoint(IPAddress.Any, 0));
+            IPAddress local = IPAddress.Any;
+            if(_bindInterface != null)
+            {
+                local = IPAddress.Parse(_bindInterface);
+            }
+            _socket.Bind(new IPEndPoint(local, _bindPort));
             SetSendWindow();
             _socket.Connect(end);
             
