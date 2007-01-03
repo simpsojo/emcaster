@@ -8,7 +8,7 @@ MessageParserFactory msgParser = new MessageParserFactory();
 SourceReader reader = new SourceReader(msgParser);
 PgmReceiver receiveSocket = new PgmReceiver("224.0.0.23", 7272, reader);
 
-TopicSubscriber topicSubscriber = new TopicSubscriber("Stock-Quotes", msgParser);
+TopicSubscriber topicSubscriber = new TopicSubscriber("Stock-Quotes-AAPL", msgParser);
 topicSubscriber.TopicMessageEvent += MyDelegateMethod;
 topicSubscriber.Start();
 receiveSocket.Start();
