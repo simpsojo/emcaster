@@ -1,11 +1,10 @@
 using System;
-using System.Collections.Generic;
-using Common.Logging;
 using System.Threading;
+using Common.Logging;
 
 namespace Emcaster.Topics
 {
-    public class TopicMonitor:IDisposable
+    public class TopicMonitor : IDisposable
     {
         private readonly ILog log;
         private readonly int _interval;
@@ -21,7 +20,7 @@ namespace Emcaster.Topics
 
         private void OnTimer()
         {
-            double avg = (_msgCount / _interval);
+            double avg = (_msgCount/_interval);
             log.Info("msg count: " + _msgCount + " avg/sec: " + avg);
             _msgCount = 0;
         }
@@ -29,10 +28,8 @@ namespace Emcaster.Topics
 
         public void Start()
         {
-            TimerCallback callback = delegate{
-                OnTimer();
-            };
-            _timer = new Timer(callback, null, 1000 * _interval, 1000 * _interval);
+            TimerCallback callback = delegate { OnTimer(); };
+            _timer = new Timer(callback, null, 1000*_interval, 1000*_interval);
         }
 
         public void Dispose()

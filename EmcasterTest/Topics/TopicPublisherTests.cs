@@ -1,11 +1,8 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
-using NUnit.Framework;
-using System.IO;
-using Emcaster.Topics;
-using Rhino.Mocks;
 using Emcaster.Sockets;
+using Emcaster.Topics;
+using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace EmcasterTest.Topics
 {
@@ -22,26 +19,24 @@ namespace EmcasterTest.Topics
             MessageParser parser = new MessageParser(msgEvent);
             TopicSubscriber subscriber = new TopicSubscriber("AAPL", msgEvent);
             subscriber.Start();
-            subscriber.TopicMessageEvent += delegate(IMessageParser msgParser)
-            {
-                received.Add(msgParser.ParseObject());
-            };
-         
+            subscriber.TopicMessageEvent +=
+                delegate(IMessageParser msgParser) { received.Add(msgParser.ParseObject()); };
+
             WriteDelegate doMessage = delegate(byte[] data, int offset, int length, int wait)
-            {
-                parser.ParseBytes(data, offset, length);
-                return true;
-            };
+                                          {
+                                              parser.ParseBytes(data, offset, length);
+                                              return true;
+                                          };
             MockRepository mocks = new MockRepository();
-            IByteWriter writer = (IByteWriter)mocks.CreateMock(typeof(IByteWriter));
+            IByteWriter writer = (IByteWriter) mocks.CreateMock(typeof (IByteWriter));
             writer.Start();
             writer.Write(null, 0, 55, 1);
             LastCall.IgnoreArguments().Do(doMessage);
             writer.Write(null, 0, 55, 1);
             LastCall.IgnoreArguments().Do(doMessage);
-      
+
             mocks.ReplayAll();
-            
+
             TopicPublisher pubber = new TopicPublisher(writer);
             pubber.Start();
             pubber.PublishObject("AAPL", "80.54", 1);

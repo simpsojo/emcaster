@@ -1,19 +1,17 @@
 using System;
-using System.Collections.Generic;
 using System.Net.Sockets;
-using Emcaster.Topics;
 using Common.Logging;
 
 namespace Emcaster.Sockets
 {
-    public class SourceReader:ISourceReader
+    public class SourceReader : ISourceReader
     {
-        private readonly static ILog log = LogManager.GetLogger(typeof(SourceReader));
+        private static readonly ILog log = LogManager.GetLogger(typeof (SourceReader));
 
         private readonly IByteParserFactory _parserFactory;
 
-        private int _receiveBufferSize = 1024 * 1024;
-        private int _readBuffer = 1024 * 130;
+        private int _receiveBufferSize = 1024*1024;
+        private int _readBuffer = 1024*130;
 
 
         public SourceReader(IByteParserFactory factory)
@@ -65,6 +63,5 @@ namespace Emcaster.Sockets
                 }
             }
         }
-         
     }
 }

@@ -1,13 +1,11 @@
-using System.Net.Sockets;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
-
 using Emcaster.Sockets;
 
 namespace Emcaster.Topics
 {
-    public class MessageParser: IMessageParser, IByteParser
+    public class MessageParser : IMessageParser, IByteParser
     {
         private readonly UTF8Encoding _decoder = new UTF8Encoding();
         private string _topic;
@@ -21,12 +19,12 @@ namespace Emcaster.Topics
         {
             _listener = listener;
         }
-   
+
         private unsafe int ParseTopicSize()
         {
             fixed (byte* pHeader = &_buffer[0])
             {
-                return ((MessageHeader*)pHeader)->TopicSize;
+                return ((MessageHeader*) pHeader)->TopicSize;
             }
         }
 
@@ -34,7 +32,7 @@ namespace Emcaster.Topics
         {
             fixed (byte* pHeader = &_buffer[0])
             {
-                return ((MessageHeader*)pHeader)->BodySize;
+                return ((MessageHeader*) pHeader)->BodySize;
             }
         }
 
@@ -70,7 +68,7 @@ namespace Emcaster.Topics
         {
             ParseBytes(data, offset, length);
         }
-    
+
 
         public unsafe void ParseBytes(byte[] buffer, int offset, int received)
         {

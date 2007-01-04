@@ -1,13 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Emcaster.Topics
 {
     public delegate void OnTopicMessage(IMessageParser parser);
 
-    public class TopicSubscriber: IDisposable
+    public class TopicSubscriber : IDisposable
     {
         public event OnTopicMessage TopicMessageEvent;
 
@@ -47,6 +45,5 @@ namespace Emcaster.Topics
                 }
             }
         }
-
     }
 }

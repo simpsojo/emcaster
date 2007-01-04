@@ -1,19 +1,17 @@
-
-using Emcaster.Sockets;
-using Emcaster.Topics;
 using System;
 using System.Collections.Specialized;
 using System.Threading;
-
 using Common.Logging;
 using Common.Logging.Simple;
+using Emcaster.Sockets;
+using Emcaster.Topics;
 
 namespace Emcaster.EmReceiver
 {
-    class Program
+    internal class Program
     {
         [STAThread]
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             if (args.Length != 3)
             {
@@ -25,7 +23,7 @@ namespace Emcaster.EmReceiver
             vals["level"] = "info";
             ConsoleOutLoggerFactoryAdapter logger = new ConsoleOutLoggerFactoryAdapter(vals);
             LogManager.Adapter = logger;
-      
+
             MessageParserFactory msgParser = new MessageParserFactory();
             SourceReader reader = new SourceReader(msgParser);
             int port = int.Parse(args[1]);

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -11,15 +10,14 @@ namespace Emcaster.Sockets
 
     public class PgmReceiver : IDisposable
     {
- 
-        private static ILog log = LogManager.GetLogger(typeof(PgmReceiver));
- 
+        private static ILog log = LogManager.GetLogger(typeof (PgmReceiver));
+
         private bool _running = true;
         private string _ip;
         private int _port;
         private PgmSocket _socket;
         private ISourceReader _reader;
-   
+
         public PgmReceiver(string address, int port, ISourceReader reader)
         {
             _socket = new PgmSocket();
@@ -38,7 +36,7 @@ namespace Emcaster.Sockets
             set { _port = value; }
         }
 
-   
+
         public void Start()
         {
             IPAddress ipAddr = IPAddress.Parse(_ip);
@@ -65,7 +63,7 @@ namespace Emcaster.Sockets
                 }
                 catch (Exception failed)
                 {
-                    if(_running)
+                    if (_running)
                         log.Warn("Accept Failed", failed);
                 }
             }
@@ -89,5 +87,4 @@ namespace Emcaster.Sockets
             }
         }
     }
-
 }

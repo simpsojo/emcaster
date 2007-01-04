@@ -1,4 +1,3 @@
-
 namespace Emcaster.Sockets
 {
     public interface IByteParser
