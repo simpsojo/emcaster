@@ -45,19 +45,18 @@ namespace Emcaster.Topics
         public static byte[] CreateMessage(string topic, byte[] data, int offset, int length, UTF8Encoding encoder){
             byte[] topicBytes = encoder.GetBytes(topic);
             MessageHeader header = new MessageHeader(topicBytes.Length, length);
-            int headerSize = Marshal.SizeOf(header);
-            int totalSize = headerSize + header.TotalSize;
+            int totalSize = HEADER_SIZE + header.TotalSize;
             byte[] allData = new byte[totalSize];
             header.WriteToBuffer(allData);
-            Array.Copy(topicBytes, 0, allData, headerSize, topicBytes.Length);
-            Array.Copy(data, offset, allData, headerSize + topicBytes.Length, length);
+            Array.Copy(topicBytes, 0, allData, HEADER_SIZE, topicBytes.Length);
+            Array.Copy(data, offset, allData, HEADER_SIZE + topicBytes.Length, length);
             return allData;
         }
 
-        public unsafe void Publish(string topic, byte[] data, int offset, int length, int msToWaitForWriteLock)
+        public unsafe bool Publish(string topic, byte[] data, int offset, int length, int msToWaitForWriteLock)
         {
             byte[] allData = CreateMessage(topic, data, offset, length, _encoder);
-            _writer.Write(allData, 0, allData.Length, msToWaitForWriteLock);
+            return _writer.Write(allData, 0, allData.Length, msToWaitForWriteLock);
         }
     }
 }
