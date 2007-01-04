@@ -45,15 +45,10 @@ namespace Emcaster.Sockets
             IPEndPoint end = new IPEndPoint(ipAddr, _port);
             _socket.Bind(end);
             _socket.ApplySocketOptions();
-            EnableGigabit(_socket);
+            PgmSocket.EnableGigabit(_socket);
             _socket.Listen(5);
             log.Info("Listening: " + end);
             ThreadPool.QueueUserWorkItem(RunAccept);
-        }
-
-        internal static void EnableGigabit(Socket socket)
-        {
-            PgmSocket.SetSocketOption(socket, "Gigabit", 1014, 1);
         }
 
         private void RunAccept(object state)

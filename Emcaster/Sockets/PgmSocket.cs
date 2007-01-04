@@ -58,12 +58,17 @@ namespace Emcaster.Sockets
             }
         }
 
-        public static void SetSocketOption(Socket socket, string name, int option, ulong val)
+        public static void EnableGigabit(Socket socket)
+        {
+            SetSocketOption(socket, "Gigabit", 1014, 1);
+        }
+
+        public static void SetSocketOption(Socket socket, string name, int option, uint val)
         {
             try
             {
                 byte[] bits = BitConverter.GetBytes(val);
-                PgmSocket.SetPgmOption(socket, option, bits);
+                SetPgmOption(socket, option, bits);
                 log.Info("Set: " + name + " Option : " + option + " value: " + val);
             }
             catch (Exception failed)
