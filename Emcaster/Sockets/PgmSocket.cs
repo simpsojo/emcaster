@@ -55,22 +55,24 @@ namespace Emcaster.Sockets
             }
         }
 
-        public static void EnableGigabit(Socket socket)
+        public static bool EnableGigabit(Socket socket)
         {
-            SetSocketOption(socket, "Gigabit", 1014, 1);
+            return SetSocketOption(socket, "Gigabit", 1014, 1);
         }
 
-        public static void SetSocketOption(Socket socket, string name, int option, uint val)
+        public static bool SetSocketOption(Socket socket, string name, int option, uint val)
         {
             try
             {
                 byte[] bits = BitConverter.GetBytes(val);
                 SetPgmOption(socket, option, bits);
                 log.Info("Set: " + name + " Option : " + option + " value: " + val);
+                return true;
             }
             catch (Exception failed)
             {
                 log.Debug(name + " Option : " + option + " value: " + val, failed);
+                return false;
             }
         }
 
