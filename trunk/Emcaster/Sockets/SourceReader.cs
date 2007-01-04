@@ -13,7 +13,7 @@ namespace Emcaster.Sockets
         private readonly IByteParserFactory _parserFactory;
 
         private int _receiveBufferSize = 1024 * 1024;
-        private int _readBuffer = 1024 * 128;
+        private int _readBuffer = 1024 * 130;
 
 
         public SourceReader(IByteParserFactory factory)
@@ -53,9 +53,15 @@ namespace Emcaster.Sockets
                         read = receiveSocket.Receive(buffer, 0, _readBuffer, SocketFlags.None);
                     }
                 }
+                catch (SocketException socketFailed)
+                {
+                    log.Info("Native Error: " + socketFailed.NativeErrorCode);
+                    log.Info("Socket Error Code: " + socketFailed.SocketErrorCode);
+                    log.Info("Socket Error: " + socketFailed.ErrorCode, socketFailed);
+                }
                 catch (Exception failed)
                 {
-                    log.Info("Closing", failed);
+                    log.Info("Unknown Exception", failed);
                 }
             }
         }
