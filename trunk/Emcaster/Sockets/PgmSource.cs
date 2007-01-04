@@ -93,6 +93,7 @@ namespace Emcaster.Sockets
             }
             _socket.Bind(new IPEndPoint(local, _bindPort));
             SetSendWindow();
+            PgmSocket.EnableGigabit(_socket);
             _socket.ApplySocketOptions();
             _socket.Connect(end);
             

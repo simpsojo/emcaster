@@ -37,7 +37,7 @@ namespace Emcaster.Sockets
             IByteParser parser = _parserFactory.Create(receiveSocket);
             using (receiveSocket)
             {
-                PgmReceiver.EnableGigabit(receiveSocket);
+                PgmSocket.EnableGigabit(receiveSocket);
                 if (_receiveBufferSize > 0)
                 {
                     receiveSocket.ReceiveBufferSize = _receiveBufferSize;

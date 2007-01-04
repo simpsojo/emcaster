@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using Common.Logging.Simple;
 using Common.Logging;
 using System.Collections.Specialized;
@@ -23,7 +24,13 @@ namespace EmcasterTest
         public static void PublishBatch(TopicPublisher pubber, string topic, int bytelength, int waitTime, int batchSize)
         {
             byte[] bytes = new byte[bytelength];
-            for (int i = 0; i < batchSize; i++)
+
+            pubber.Publish(topic, bytes, 0, bytelength, waitTime);
+
+            // Give time for subscribers to initialize
+            Thread.Sleep(2000);
+
+            for (int i = 1; i < batchSize; i++)
             {
                 pubber.Publish(topic, bytes, 0, bytelength, waitTime);
             }
