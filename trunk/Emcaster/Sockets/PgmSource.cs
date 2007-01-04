@@ -1,25 +1,20 @@
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
-
 using Common.Logging;
 
 namespace Emcaster.Sockets
 {
- 
     public class PgmSource : IDisposable, IByteWriter
     {
-   
-        private static ILog log = LogManager.GetLogger(typeof(PgmSource));
- 
+        private static ILog log = LogManager.GetLogger(typeof (PgmSource));
+
         private readonly string _ip;
         private readonly int _port;
         private readonly PgmSocket _socket;
-        private int _sendSocketSize = 1024 * 1024;
+        private int _sendSocketSize = 1024*1024;
 
-        private uint _rateKbitsPerSec = 1024 * 10;
+        private uint _rateKbitsPerSec = 1024*10;
         private uint _windowSizeInMSecs;
         private uint _windowSizeInBytes = 1000*1000*10;
 
@@ -53,14 +48,8 @@ namespace Emcaster.Sockets
 
         public int SocketBufferSize
         {
-            set
-            {
-                _sendSocketSize = value;
-            }
-            get
-            {
-                return _sendSocketSize;
-            }
+            set { _sendSocketSize = value; }
+            get { return _sendSocketSize; }
         }
 
         public string BindInterface
@@ -80,14 +69,14 @@ namespace Emcaster.Sockets
             get { return _socket; }
         }
 
-     
+
         public void Start()
         {
             IPAddress ipAddr = IPAddress.Parse(_ip);
             IPEndPoint end = new IPEndPoint(ipAddr, _port);
             _socket.SendBufferSize = _sendSocketSize;
             IPAddress local = IPAddress.Any;
-            if(_bindInterface != null)
+            if (_bindInterface != null)
             {
                 local = IPAddress.Parse(_bindInterface);
             }
@@ -96,7 +85,6 @@ namespace Emcaster.Sockets
             PgmSocket.EnableGigabit(_socket);
             _socket.ApplySocketOptions();
             _socket.Connect(end);
-            
         }
 
         public bool Write(byte[] data, int offset, int length, int msWaitIgnored)
@@ -130,29 +118,28 @@ namespace Emcaster.Sockets
             window.WindowSizeInMSecs = WindowSizeInMSecs;
             window.WindowSizeInBytes = WindowSizeinBytes;
             byte[] allData = PgmSocket.ConvertStructToBytes(window);
-            _socket.SetSocketOption(PgmSocket.PGM_LEVEL, (SocketOptionName)1001, allData);
+            _socket.SetSocketOption(PgmSocket.PGM_LEVEL, (SocketOptionName) 1001, allData);
         }
 
 
         public unsafe _RM_SEND_WINDOW GetSendWindow()
         {
-            int size = sizeof(_RM_SEND_WINDOW);
-            byte[] data = _socket.GetSocketOption(PgmSocket.PGM_LEVEL, (SocketOptionName)1001, size);
+            int size = sizeof (_RM_SEND_WINDOW);
+            byte[] data = _socket.GetSocketOption(PgmSocket.PGM_LEVEL, (SocketOptionName) 1001, size);
             fixed (byte* pBytes = &data[0])
             {
-                return *((_RM_SEND_WINDOW*)pBytes);
+                return *((_RM_SEND_WINDOW*) pBytes);
             }
         }
 
         public unsafe _RM_SENDER_STATS GetSenderStats()
         {
-            int size = sizeof(_RM_SENDER_STATS);
-            byte[] data = _socket.GetSocketOption(PgmSocket.PGM_LEVEL, (SocketOptionName)1005, size);
-            fixed(byte* pBytes = &data[0])
+            int size = sizeof (_RM_SENDER_STATS);
+            byte[] data = _socket.GetSocketOption(PgmSocket.PGM_LEVEL, (SocketOptionName) 1005, size);
+            fixed (byte* pBytes = &data[0])
             {
-                return *((_RM_SENDER_STATS*)pBytes);
+                return *((_RM_SENDER_STATS*) pBytes);
             }
         }
     }
-
 }

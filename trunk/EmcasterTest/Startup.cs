@@ -1,10 +1,9 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Text;
 using System.Threading;
-using Common.Logging.Simple;
 using Common.Logging;
-using System.Collections.Specialized;
+using Common.Logging.Simple;
 using Emcaster.Topics;
 
 namespace EmcasterTest
@@ -42,13 +41,9 @@ namespace EmcasterTest
             vals["level"] = "info";
             ConsoleOutLoggerFactoryAdapter logger = new ConsoleOutLoggerFactoryAdapter(vals);
             LogManager.Adapter = logger;
-            ILog log = LogManager.GetLogger(typeof(Startup));
-            System.AppDomain.CurrentDomain.UnhandledException += delegate(object sender, UnhandledExceptionEventArgs exc)
-            {
-                log.Error(exc.ExceptionObject);
-            };
+            ILog log = LogManager.GetLogger(typeof (Startup));
+            AppDomain.CurrentDomain.UnhandledException +=
+                delegate(object sender, UnhandledExceptionEventArgs exc) { log.Error(exc.ExceptionObject); };
         }
-
-     
     }
 }

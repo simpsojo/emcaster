@@ -1,9 +1,9 @@
-using Emcaster.Sockets;
 using System.Net.Sockets;
+using Emcaster.Sockets;
 
 namespace Emcaster.Topics
 {
-    public class MessageParserFactory:IByteParserFactory, IMessageListener, IMessageEvent
+    public class MessageParserFactory : IByteParserFactory, IMessageListener, IMessageEvent
     {
         public event OnTopicMessage MessageEvent;
 

@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.InteropServices;
-
 
 namespace Emcaster.Topics
 {
@@ -37,8 +32,8 @@ namespace Emcaster.Topics
         {
             GCHandle handle = GCHandle.Alloc(allData, GCHandleType.Pinned);
             Marshal.StructureToPtr(this,
-                handle.AddrOfPinnedObject(),
-                false);
+                                   handle.AddrOfPinnedObject(),
+                                   false);
             handle.Free();
         }
     }

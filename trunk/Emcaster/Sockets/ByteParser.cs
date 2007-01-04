@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Net.Sockets;
 
 namespace Emcaster.Sockets
 {
-    public class ByteParser:IByteParserFactory, IByteParser
+    public class ByteParser : IByteParserFactory, IByteParser
     {
         public event OnReceive ReceiveEvent;
 

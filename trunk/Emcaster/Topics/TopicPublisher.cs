@@ -1,9 +1,8 @@
-using Emcaster.Sockets;
+using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Runtime.InteropServices;
 using System.Text;
-using System;
+using Emcaster.Sockets;
 
 namespace Emcaster.Topics
 {
@@ -18,9 +17,9 @@ namespace Emcaster.Topics
             _writer = writer;
         }
 
-        public unsafe static int CalculateHeaderSize()
+        public static unsafe int CalculateHeaderSize()
         {
-            return sizeof(MessageHeader);
+            return sizeof (MessageHeader);
         }
 
         public void Start()
@@ -31,7 +30,7 @@ namespace Emcaster.Topics
         public void PublishObject(string topic, object data, int msToWaitForWriteLock)
         {
             byte[] allData = ToBytes(data);
-            Publish(topic, allData, 0, allData.Length, msToWaitForWriteLock); 
+            Publish(topic, allData, 0, allData.Length, msToWaitForWriteLock);
         }
 
         private static byte[] ToBytes(object obj)
@@ -42,7 +41,8 @@ namespace Emcaster.Topics
             return outputStream.ToArray();
         }
 
-        public static byte[] CreateMessage(string topic, byte[] data, int offset, int length, UTF8Encoding encoder){
+        public static byte[] CreateMessage(string topic, byte[] data, int offset, int length, UTF8Encoding encoder)
+        {
             byte[] topicBytes = encoder.GetBytes(topic);
             MessageHeader header = new MessageHeader(topicBytes.Length, length);
             int totalSize = HEADER_SIZE + header.TotalSize;

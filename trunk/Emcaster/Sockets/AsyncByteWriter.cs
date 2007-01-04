@@ -1,18 +1,16 @@
 using System;
-using System.IO;
 using System.Net.Sockets;
 using System.Threading;
 using Common.Logging;
 
 namespace Emcaster.Sockets
 {
-
     /// <summary>
     /// Writes bytes to a pending buffer. Thread safe for several writing threads.
     /// </summary>
-    public class AsyncByteWriter: IByteWriter
+    public class AsyncByteWriter : IByteWriter
     {
-        private static ILog log = LogManager.GetLogger(typeof(AsyncByteWriter));
+        private static ILog log = LogManager.GetLogger(typeof (AsyncByteWriter));
 
         private object _lock = new object();
 
@@ -20,7 +18,7 @@ namespace Emcaster.Sockets
         private ByteBuffer _flushBuffer;
         private Socket _target;
         private bool _running = true;
-        private int _minFlushSize = 1024 * 10;
+        private int _minFlushSize = 1024*10;
         private int _sleepOnMin = 10;
 
         private Timer _timer;
@@ -31,7 +29,7 @@ namespace Emcaster.Sockets
         private long _sleepTime = 0;
 
         public AsyncByteWriter(PgmSource pubber, int maxBufferSizeInBytes)
-            :this(pubber.Socket, maxBufferSizeInBytes)
+            : this(pubber.Socket, maxBufferSizeInBytes)
         {
         }
 
@@ -40,7 +38,7 @@ namespace Emcaster.Sockets
             _target = target;
             _pendingBuffer = new ByteBuffer(maxBufferSizeInBytes);
             _flushBuffer = new ByteBuffer(maxBufferSizeInBytes);
-            _minFlushSize = maxBufferSizeInBytes / 2;
+            _minFlushSize = maxBufferSizeInBytes/2;
         }
 
         public int SleepOnMin
@@ -155,26 +153,20 @@ namespace Emcaster.Sockets
         public void Start()
         {
             WaitCallback callback =
-                delegate
-                {
-                    FlushRunner();
-                };
+                delegate { FlushRunner(); };
             ThreadPool.QueueUserWorkItem(callback);
             if (_printStats)
             {
-                  TimerCallback timerCallBack = delegate
-                  {
-                        LogStats();
-                    };
-                  _timer = new Timer(timerCallBack, null, _statsInterval * 1000, _statsInterval * 1000);
+                TimerCallback timerCallBack = delegate { LogStats(); };
+                _timer = new Timer(timerCallBack, null, _statsInterval*1000, _statsInterval*1000);
             }
         }
 
         private void LogStats()
         {
             double avgBytes = 0;
-            if(_flushes > 0)
-                avgBytes = (_flushedBytes / _flushes);
+            if (_flushes > 0)
+                avgBytes = (_flushedBytes/_flushes);
 
             log.Info("Flushes: " + _flushes + " Avg/Bytes: " + avgBytes + " Sleep(ms): " + _sleepTime);
             _flushes = 0;
