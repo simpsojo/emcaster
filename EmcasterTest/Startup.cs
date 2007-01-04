@@ -4,6 +4,8 @@ using System.Text;
 using Common.Logging.Simple;
 using Common.Logging;
 using System.Collections.Specialized;
+using Emcaster.Topics;
+
 namespace EmcasterTest
 {
     public class Startup
@@ -18,6 +20,14 @@ namespace EmcasterTest
             return new UTF8Encoding().GetBytes(data);
         }
 
+        public static void PublishBatch(TopicPublisher pubber, string topic, int bytelength, int waitTime, int batchSize)
+        {
+            byte[] bytes = new byte[bytelength];
+            for (int i = 0; i < batchSize; i++)
+            {
+                pubber.Publish(topic, bytes, 0, bytelength, waitTime);
+            }
+        }
 
         public static void ConfigureLogging()
         {

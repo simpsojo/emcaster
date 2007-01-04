@@ -23,6 +23,13 @@ namespace Emcaster.Sockets
         private int _minFlushSize = 1024 * 10;
         private int _sleepOnMin = 10;
 
+        private Timer _timer;
+        private bool _printStats = false;
+        private int _statsInterval = 10;
+        private long _flushedBytes = 0;
+        private long _flushes = 0;
+        private long _sleepTime = 0;
+
         public AsyncByteWriter(PgmSource pubber, int maxBufferSizeInBytes)
             :this(pubber.Socket, maxBufferSizeInBytes)
         {
@@ -38,11 +45,25 @@ namespace Emcaster.Sockets
         public int SleepOnMin
         {
             set { _sleepOnMin = value; }
+            get { return _sleepOnMin; }
         }
 
         public int MinFlushSizeInBytes
         {
             set { _minFlushSize = value; }
+            get { return _minFlushSize; }
+        }
+
+        public bool PrintStats
+        {
+            get { return _printStats; }
+            set { _printStats = value; }
+        }
+
+        public int StatsIntervalInSeconds
+        {
+            get { return _statsInterval; }
+            set { _statsInterval = value; }
         }
 
         /// <summary>
@@ -105,16 +126,25 @@ namespace Emcaster.Sockets
                     log.Error("Async Flush Failed msg: " + failed.Message + " stack: " + failed.StackTrace);
                 }
                 _flushBuffer.Reset();
+                if (_printStats)
+                {
+                    _flushes++;
+                    _flushedBytes += length;
+                }
                 if (length < _minFlushSize)
                 {
                     Thread.Sleep(_sleepOnMin);
+                    if (_printStats)
+                    {
+                        _sleepTime += _sleepOnMin;
+                    }
                 }
             }
         }
 
         internal void FlushRunner()
         {
-            log.Info("Started Flush Thread for " + GetType().FullName);
+            log.Debug("Started Flush Thread for " + GetType().FullName);
             while (_running)
             {
                 FlushBuffer();
@@ -129,11 +159,35 @@ namespace Emcaster.Sockets
                     FlushRunner();
                 };
             ThreadPool.QueueUserWorkItem(callback);
+            if (_printStats)
+            {
+                  TimerCallback timerCallBack = delegate
+                  {
+                        LogStats();
+                    };
+                  _timer = new Timer(timerCallBack, null, _statsInterval * 1000, _statsInterval * 1000);
+            }
+        }
+
+        private void LogStats()
+        {
+            double avgBytes = 0;
+            if(_flushes > 0)
+                avgBytes = (_flushedBytes / _flushes);
+
+            log.Info("Flushes: " + _flushes + " Avg/Bytes: " + avgBytes + " Sleep(ms): " + _sleepTime);
+            _flushes = 0;
+            _flushedBytes = 0;
+            _sleepTime = 0;
         }
 
         public void Dispose()
         {
             log.Info(GetType().FullName + " Disposed");
+            if (_timer != null)
+            {
+                _timer.Dispose();
+            }
             lock (_lock)
             {
                 _running = false;
