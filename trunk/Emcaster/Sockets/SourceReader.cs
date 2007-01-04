@@ -12,6 +12,7 @@ namespace Emcaster.Sockets
 
         private int _receiveBufferSize = 1024*1024;
         private int _readBuffer = 1024*130;
+        private bool _forceBlockingOnEveryReceive = false;
 
 
         public SourceReader(IByteParserFactory factory)
@@ -22,11 +23,23 @@ namespace Emcaster.Sockets
         public int ReceiveBufferInBytes
         {
             set { _receiveBufferSize = (value); }
+            get { return _receiveBufferSize;  }
         }
 
         public int ReadBufferInBytes
         {
             set { _readBuffer = (value); }
+            get { return _readBuffer;  }
+        }
+
+        /// <summary>
+        /// Set to true to compensate for strange bug in socket protocol.
+        /// Not always needed.
+        /// </summary>
+        public bool ForceBlockingOnEveryReceive
+        {
+            get { return _forceBlockingOnEveryReceive; }
+            set { _forceBlockingOnEveryReceive = value; }
         }
 
 
@@ -40,6 +53,8 @@ namespace Emcaster.Sockets
                 {
                     receiveSocket.ReceiveBufferSize = _receiveBufferSize;
                 }
+                receiveSocket.Blocking = true;
+
                 byte[] buffer = new byte[_readBuffer];
                 try
                 {
@@ -47,7 +62,10 @@ namespace Emcaster.Sockets
                     while (read > 0 && _running)
                     {
                         parser.OnBytes(buffer, 0, read);
-                        receiveSocket.Blocking = true;
+                        if (_forceBlockingOnEveryReceive)
+                        {
+                            receiveSocket.Blocking = true;
+                        }
                         read = receiveSocket.Receive(buffer, 0, _readBuffer, SocketFlags.None);
                     }
                 }

@@ -17,6 +17,7 @@ namespace Emcaster.Sockets
         private int _port;
         private PgmSocket _socket;
         private ISourceReader _reader;
+        private int _receiveBufferInBytes = 1024*128;
 
         public PgmReceiver(string address, int port, ISourceReader reader)
         {
@@ -36,9 +37,15 @@ namespace Emcaster.Sockets
             set { _port = value; }
         }
 
+        public int ReceiveBufferInBytes
+        {
+            get { return _receiveBufferInBytes;  }
+            set { _receiveBufferInBytes = value; }
+        }
 
         public void Start()
         {
+            _socket.ReceiveBufferSize = _receiveBufferInBytes;
             IPAddress ipAddr = IPAddress.Parse(_ip);
             IPEndPoint end = new IPEndPoint(ipAddr, _port);
             _socket.Bind(end);
@@ -56,7 +63,6 @@ namespace Emcaster.Sockets
                 try
                 {
                     Socket conn = _socket.Accept();
-                    conn.Blocking = true;
                     log.Info("Connection from: " + conn.RemoteEndPoint);
                     WaitCallback runner = delegate { RunReceiver(conn); };
                     ThreadPool.QueueUserWorkItem(runner);
