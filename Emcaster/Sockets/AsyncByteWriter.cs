@@ -40,6 +40,7 @@ namespace Emcaster.Sockets
             _target = target;
             _pendingBuffer = new ByteBuffer(maxBufferSizeInBytes);
             _flushBuffer = new ByteBuffer(maxBufferSizeInBytes);
+            _minFlushSize = maxBufferSizeInBytes / 2;
         }
 
         public int SleepOnMin
