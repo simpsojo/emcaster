@@ -13,6 +13,17 @@ The Emcaster TopicPublisher object provides methods for publishing objects or ra
 Emcaster automatically batches outgoing messages to optimize network writes. A separate thread is used to flush the bytes to the network. The AsyncByteWriter class contains several  methods that may need to be tweaked for hardware and network differences.
   * [http://emcaster.googlecode.com/svn/trunk/Emcaster/Sockets/AsyncByteWriter.cs AsyncByteWriter] 
 
+Also stats can be logged to help determine bottlenecks.
+{{
+asyncWriter = new AsyncByteWriter(sendSocket, 1024*128);
+asyncWriter.PrintStats = true;
+
+...
+[INFO]  Emcaster.Sockets.AsyncByteWriter - Flushes: 728 Avg/Bytes: 108636 Sleep(ms): 1280
+}}
+
+Using these stats, the sender can be optimized to balance between CPU utilization, latency, and throughput.
+
 === Buffering ===
 The pgm senders and receivers have buffers that may need to be increased to accommodate larger loads. 
   * [http://emcaster.googlecode.com/svn/trunk/Emcaster/Sockets/PgmReceiver.cs PgmReceiver]
