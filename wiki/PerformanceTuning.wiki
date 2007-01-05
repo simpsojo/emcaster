@@ -18,3 +18,15 @@ The pgm senders and receivers have buffers that may need to be increased to acco
   * [http://emcaster.googlecode.com/svn/trunk/Emcaster/Sockets/PgmReceiver.cs PgmReceiver]
   * [http://emcaster.googlecode.com/svn/trunk/Emcaster/Sockets/PgmSource.cs PgmSource]
   * [http://emcaster.googlecode.com/svn/trunk/Emcaster/Sockets/SourceReader.cs SourceReader]
+
+=== PGM Options ===
+Emcaster automatically enables pgm for high speed networks. Other [http://msdn2.microsoft.com/en-gb/library/ms738591.aspx pgm options] may need to be set to achieve optimal performance.
+
+The PgmSource class provides some convenience methods for setting the send rate and window size. 
+{{{
+PgmSource sendSocket = new PgmSource(address, port)
+sendSocket.RateKbitsPerSec = 75000
+sendSocket.WindowSizeInMSecs = 2000
+sendSocket.WindowSizeinBytes = 0
+}}}
+Only two options need to be set. The socket will calculate the third. An improperly set send option will result in a socket error at startup.
