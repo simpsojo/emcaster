@@ -10,7 +10,7 @@ Emcaster is a reliable multicast library written in c#. It uses Pragmatic Genera
   * [http://springframework.net/doc-latest/reference/html/ch13.html Common Logging from Spring]
 
 = Features =
-  * Topics with Regex based Matching
+  * EmcasterTopics with Regex based Matching
   * Performance - > 100 thousand messages per second on commodity hardware
 
 = Examples =
