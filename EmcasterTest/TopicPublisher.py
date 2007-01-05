@@ -15,7 +15,7 @@ address = "224.0.0.23"
 port = 8001
 
 sendSocket = PgmSource(address, port)
-sendSocket.RateKbitsPerSec = 50000
+sendSocket.RateKbitsPerSec = 75000
 sendSocket.WindowSizeInMSecs = 2000
 sendSocket.WindowSizeinBytes = 0
 
@@ -27,13 +27,16 @@ asyncWriter.PrintStats = 1
 publisher = TopicPublisher(asyncWriter);
 
 topic = "test"
-numBytes = 40
+bytes = 10
 waitTime = 1000
 msgCount = 9999999
+
+def send_all():
+	Startup.PublishBatch(publisher, topic, bytes, waitTime, msgCount)
 
 def go():
 	sendSocket.Start()
 	publisher.Start()
-	Startup.PublishBatch(publisher, topic, numBytes, waitTime, msgCount)
-
+	send_all()
+	
 print "Ready to Publish: ", address, " " , port
