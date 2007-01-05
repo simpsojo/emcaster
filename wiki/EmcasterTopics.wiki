@@ -1,0 +1,12 @@
+
+= Topics =
+
+Topics with Emcaster are just strings. They can be any length are are encoded in UTF-8 for transport.
+
+= Topic Filtering =
+
+Topics are filtered using basic regular expressions. Specifically, The <a href="http://msdn2.microsoft.com/en-us/library/system.text.regularexpressions.regex.aspx">Regex</a>  class is used to compile and execute the expression.
+
+= Defining Namespaces =
+Since topics are regular expressions, take care to avoid characters commonly used in regular expressions such as '*' and '.'.
+
