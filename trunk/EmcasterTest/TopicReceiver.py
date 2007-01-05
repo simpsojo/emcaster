@@ -18,6 +18,8 @@ Startup.ConfigureLogging()
 
 msgParser = MessageParserFactory()
 reader = SourceReader(msgParser)
+reader.ReceiveBufferInBytes = 1024*1024*5
+
 port = int(args[1])
 receiveSocket = PgmReceiver(args[0], port, reader)
 
@@ -25,7 +27,7 @@ topicSubscriber = TopicSubscriber(args[2], msgParser)
 monitor = TopicMonitor(args[2], 10);
 topicSubscriber.TopicMessageEvent += monitor.OnMessage;
 
-def start_all():
+def go():
 	topicSubscriber.Start()
 	monitor.Start()
 	receiveSocket.Start()

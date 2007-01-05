@@ -155,10 +155,15 @@ namespace Emcaster.Sockets
             WaitCallback callback =
                 delegate { FlushRunner(); };
             ThreadPool.QueueUserWorkItem(callback);
+            StartStats();
+        }
+
+        public void StartStats()
+        {
             if (_printStats)
             {
                 TimerCallback timerCallBack = delegate { LogStats(); };
-                _timer = new Timer(timerCallBack, null, _statsInterval*1000, _statsInterval*1000);
+                _timer = new Timer(timerCallBack, null, _statsInterval * 1000, _statsInterval * 1000);
             }
         }
 
@@ -174,13 +179,18 @@ namespace Emcaster.Sockets
             _sleepTime = 0;
         }
 
-        public void Dispose()
+        public void StopStats()
         {
-            log.Info(GetType().FullName + " Disposed");
             if (_timer != null)
             {
                 _timer.Dispose();
             }
+        }
+
+        public void Dispose()
+        {
+            log.Info(GetType().FullName + " Disposed");
+            StopStats();
             lock (_lock)
             {
                 _running = false;
