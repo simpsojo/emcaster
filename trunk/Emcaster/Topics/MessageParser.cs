@@ -58,7 +58,7 @@ namespace Emcaster.Topics
         public unsafe void ParseBytes(byte[] buffer, int offset, int received)
         {
             _buffer = buffer;
-            _offset = 0;
+            _offset = offset;
             fixed (byte* pArray = buffer)
             {
                 while (_offset < received)
