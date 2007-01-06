@@ -24,6 +24,7 @@ namespace Emcaster.Sockets
         private Timer _timer;
         private bool _printStats = false;
         private int _statsInterval = 10;
+        private int _msgCount = 0;
         private long _flushedBytes = 0;
         private long _flushes = 0;
         private long _sleepTime = 0;
@@ -88,6 +89,8 @@ namespace Emcaster.Sockets
                     return false;
 
                 _pendingBuffer.Write(buffer, offset, size);
+                if (_printStats)
+                    _msgCount++;
                 // other threads could be waiting to buffer Or the flush thread 
                 // could be waiting to retry.
                 Monitor.PulseAll(_lock);
@@ -173,7 +176,9 @@ namespace Emcaster.Sockets
             if (_flushes > 0)
                 avgBytes = (_flushedBytes/_flushes);
 
-            log.Info("Flushes: " + _flushes + " Avg/Bytes: " + avgBytes + " Sleep(ms): " + _sleepTime);
+            int avgMessages = _msgCount / _statsInterval;
+            log.Info("MsgAvg: " + avgMessages + " Flushes: " + _flushes + " Avg/Bytes: " + avgBytes + " Sleep(ms): " + _sleepTime);
+            _msgCount = 0;
             _flushes = 0;
             _flushedBytes = 0;
             _sleepTime = 0;
