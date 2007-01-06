@@ -25,6 +25,23 @@ namespace EmcasterTest.Topics
             }
         }
 
+        [Test]
+        [Explicit]
+        public void PerfParsing()
+        {
+            MessageParserFactory factory = new MessageParserFactory();
+            MessageParser parser = new MessageParser(factory);
+            UTF8Encoding encoder = new UTF8Encoding();
+            byte[] data = TopicPublisher.CreateMessage("test", new byte[0], 0, 0, encoder);
+            data = CreateBatch(data, 1000);
+            int msgCount = 0;
+            factory.MessageEvent += delegate { msgCount++; };
+            for (int i = 0; i < 500000; i++)
+            {
+                parser.OnBytes(data, 0, data.Length);
+            }
+        }
+
         private byte[] CreateBatch(byte[] data, int number)
         {
             byte[] result = new byte[data.Length*number];

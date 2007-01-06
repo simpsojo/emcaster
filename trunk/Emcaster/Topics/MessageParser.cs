@@ -5,7 +5,7 @@ using Emcaster.Sockets;
 
 namespace Emcaster.Topics
 {
-    public class MessageParser : IMessageParser, IByteParser
+    public unsafe class MessageParser : IMessageParser, IByteParser
     {
         private readonly UTF8Encoding _decoder = new UTF8Encoding();
         private string _topic;
@@ -14,36 +14,21 @@ namespace Emcaster.Topics
 
         private byte[] _buffer;
         private readonly IMessageListener _listener;
+        private MessageHeader* _currentHeader;
 
         public MessageParser(IMessageListener listener)
         {
             _listener = listener;
         }
 
-        private unsafe int ParseTopicSize()
-        {
-            fixed (byte* pHeader = &_buffer[0])
-            {
-                return ((MessageHeader*) pHeader)->TopicSize;
-            }
-        }
-
-        private unsafe int ParseBodySize()
-        {
-            fixed (byte* pHeader = &_buffer[0])
-            {
-                return ((MessageHeader*) pHeader)->BodySize;
-            }
-        }
-
-
+    
         public string Topic
         {
             get
             {
                 if (_topic == null)
                 {
-                    int topicSize = ParseTopicSize();
+                    int topicSize = _currentHeader->TopicSize;
                     _topic = _decoder.GetString(_buffer, TopicPublisher.HEADER_SIZE, topicSize);
                 }
                 return _topic;
@@ -55,8 +40,8 @@ namespace Emcaster.Topics
             if (_object == null)
             {
                 BinaryFormatter formatter = new BinaryFormatter();
-                int bodySize = ParseBodySize();
-                int topicSize = ParseTopicSize();
+                int bodySize = _currentHeader->BodySize;
+                int topicSize = _currentHeader->TopicSize;
                 int totalOffset = _offset + topicSize + TopicPublisher.HEADER_SIZE;
                 MemoryStream stream = new MemoryStream(_buffer, totalOffset, bodySize);
                 _object = formatter.Deserialize(stream);
@@ -74,13 +59,15 @@ namespace Emcaster.Topics
         {
             _buffer = buffer;
             _offset = 0;
-            while (_offset < received)
+            fixed (byte* pArray = buffer)
             {
-                _topic = null;
-                _object = null;
-                fixed (byte* pByte = &_buffer[_offset])
+                while (_offset < received)
                 {
-                    int msgSize = TopicPublisher.HEADER_SIZE + ParseTopicSize() + ParseBodySize();
+                    _topic = null;
+                    _object = null;
+                    byte* pHeader = (pArray + _offset);
+                    _currentHeader = (MessageHeader*)pHeader;
+                    int msgSize = TopicPublisher.HEADER_SIZE + _currentHeader->TopicSize + _currentHeader->BodySize;
                     _listener.OnMessage(this);
                     _offset += msgSize;
                 }
