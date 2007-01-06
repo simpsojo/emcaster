@@ -12,7 +12,7 @@ Emcaster is a reliable multicast library written in c#. It uses [http://en.wikip
 = Features =
   * EmcasterTopics with Regex based Matching
   * Performance - > 100 thousand messages per second on commodity hardware. See PerformanceTuning.
-  * Reliable, In-Order Multicast with PGM
+  * Reliable, In-Order Multicast with PGM - WhyPgm
 
 = Examples =
 
