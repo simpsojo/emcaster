@@ -30,11 +30,10 @@ namespace Emcaster.Topics
 
         public unsafe void WriteToBuffer(byte[] allData)
         {
-            GCHandle handle = GCHandle.Alloc(allData, GCHandleType.Pinned);
-            Marshal.StructureToPtr(this,
-                                   handle.AddrOfPinnedObject(),
-                                   false);
-            handle.Free();
+            fixed (byte* pData = allData)
+            {
+                *((MessageHeader*)pData) = this;
+            }
         }
     }
 }
