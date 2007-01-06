@@ -5,7 +5,7 @@ Emcaster is a reliable multicast library written in c#. It uses [http://en.wikip
 = Dependencies =
 
   * [http://www.microsoft.com/net/default.mspx .NET 2.0 or later]
-  * [http://www.microsoft.com/windowsserver2003/technologies/msmq/default.mspx MSMQ 3.0]
+  * [http://www.microsoft.com/windowsserver2003/technologies/msmq/default.mspx MSMQ 3.0] - InstallMsmq
   * Windows 2000, Windows 2003, Windows XP
   * [http://springframework.net/doc-latest/reference/html/ch13.html Common Logging from Spring]
 
