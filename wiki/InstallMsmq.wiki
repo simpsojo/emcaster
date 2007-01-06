@@ -2,6 +2,6 @@ Message Queuing 3.0 must be installed and running on computers that will be send
 
 == Steps ==
 
-1.	On the Start menu, point to Settings, and then click Control Panel.
-2.	Double-click Add/Remove Programs, and then click Add/Remove Windows Components.
-3.	Select Messaging Queuing from the list.
+  # On the Start menu, point to Settings, and then click Control Panel.
+  # Double-click Add/Remove Programs, and then click Add/Remove Windows Components.
+  # Select Messaging Queuing from the list.
