@@ -9,7 +9,10 @@ SourceReader reader = new SourceReader(msgParser);
 PgmReceiver receiveSocket = new PgmReceiver("224.0.0.23", 7272, reader);
 
 TopicSubscriber topicSubscriber = new TopicSubscriber("Stock-Quotes-AAPL", msgParser);
-topicSubscriber.TopicMessageEvent += MyDelegateMethod;
+topicSubscriber.TopicMessageEvent += YourDelegateMethod;
 topicSubscriber.Start();
 receiveSocket.Start();
 }}}
+
+== Your Delegate Method ==
+Your method should be thread safe. With multiple sources, the method will be called from multiple threads. Also, do not retain a reference the parser object since it is reused between objects. 
