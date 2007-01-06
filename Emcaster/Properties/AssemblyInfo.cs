@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 [assembly : AssemblyTitle("Emcaster")]
 [assembly : AssemblyDescription("")]
 [assembly : AssemblyConfiguration("")]
-[assembly : AssemblyCompany("")]
+[assembly : AssemblyCompany("Mike Rettig")]
 [assembly : AssemblyProduct("Emcaster")]
 [assembly : AssemblyCopyright("Copyright ©  2006")]
 [assembly : AssemblyTrademark("")]
@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly : AssemblyVersion("1.0.0.0")]
-[assembly : AssemblyFileVersion("1.0.0.0")]
+[assembly : AssemblyVersion("0.1.0.0")]
+[assembly : AssemblyFileVersion("0.1.0.0")]
