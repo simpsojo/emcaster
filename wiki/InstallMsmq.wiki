@@ -1,0 +1,7 @@
+Message Queuing 3.0 must be installed and running on computers that will be sending and receiving messages using Emcaster. MSMQ installs PGM as a dependency.
+
+== Steps ==
+
+1.	On the Start menu, point to Settings, and then click Control Panel.
+2.	Double-click Add/Remove Programs, and then click Add/Remove Windows Components.
+3.	Select Messaging Queuing from the list.
