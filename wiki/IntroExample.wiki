@@ -1,4 +1,3 @@
-#labels Featured
 = Introduction =
 
 Emcaster is a reliable multicast library written in c#. It uses [http://en.wikipedia.org/wiki/Pragmatic_General_Multicast Pragmatic General Multicast (PGM)] for peer to peer reliable multicast.
