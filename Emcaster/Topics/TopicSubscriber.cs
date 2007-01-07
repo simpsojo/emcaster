@@ -14,7 +14,7 @@ namespace Emcaster.Topics
 
         public TopicSubscriber(string topic, IMessageEvent msgEvent)
         {
-            _regex = new Regex(topic);
+            _regex = new Regex(topic, RegexOptions.Compiled);
             _msgEvent = msgEvent;
         }
 

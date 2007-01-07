@@ -32,14 +32,26 @@ namespace EmcasterTest.Topics
             MessageParserFactory factory = new MessageParserFactory();
             MessageParser parser = new MessageParser(factory);
             UTF8Encoding encoder = new UTF8Encoding();
+            TopicSubscriber subscriber = new TopicSubscriber("test", factory);
+            long msgCount =0;
+            subscriber.TopicMessageEvent += delegate
+            {
+                msgCount++;
+            };
+            subscriber.Start();
+
             byte[] data = TopicPublisher.CreateMessage("test", new byte[0], 0, 0, encoder);
-            data = CreateBatch(data, 1000);
-            int msgCount = 0;
-            factory.MessageEvent += delegate { msgCount++; };
-            for (int i = 0; i < 500000; i++)
+            int batchSize = 1000;
+            data = CreateBatch(data, batchSize);
+            DateTime start = DateTime.Now;
+            int loopCount = 5000;
+            for (int i = 0; i < loopCount; i++)
             {
                 parser.OnBytes(data, 0, data.Length);
             }
+            TimeSpan time = DateTime.Now.Subtract(start);
+            double avgMsg = (msgCount)/time.TotalSeconds;
+            Console.WriteLine("avg msg /sec: " + avgMsg); 
         }
 
         private byte[] CreateBatch(byte[] data, int number)
