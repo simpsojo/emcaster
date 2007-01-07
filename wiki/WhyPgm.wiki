@@ -5,3 +5,7 @@ PGM provides an ideal transport for reliable messaging.
   * In Order Delivery - The protocol will order messages if the messages arrive out of order
   * NAK based messaging - If a message is missed, the source will request a repair packet.
   * Multicast - Supports multiple consumers
+
+== How Reliable? ==
+
+As long as the network and your application do not become overloaded or crash, all messages should be delivered. However, under heavy load on the network or application layer messages could be lost, which is most often the desired behavior. Also, Emcaster provides no facilities for recovering from an application crash. Messages are published as multicast packets. If the app is not running, then it will never receive the packets.   
