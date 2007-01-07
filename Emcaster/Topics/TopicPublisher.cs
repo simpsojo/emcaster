@@ -35,6 +35,10 @@ namespace Emcaster.Topics
 
         private static byte[] ToBytes(object obj)
         {
+            if (obj == null)
+            {
+                return new byte[0];
+            }
             BinaryFormatter formatter = new BinaryFormatter();
             MemoryStream outputStream = new MemoryStream();
             formatter.Serialize(outputStream, obj);

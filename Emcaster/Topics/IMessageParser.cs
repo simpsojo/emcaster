@@ -5,5 +5,6 @@ namespace Emcaster.Topics
         string Topic { get; }
 
         object ParseObject();
+        byte[] ParseBytes();
     }
 }

@@ -35,12 +35,30 @@ namespace Emcaster.Topics
             }
         }
 
+        public byte[] ParseBytes()
+        {
+            int size = _currentHeader->BodySize;
+            if (size == 0)
+            {
+                return new byte[0];
+            }
+            byte[] result = new byte[size];
+            int topicSize = _currentHeader->TopicSize;
+            int totalOffset = _offset + topicSize + TopicPublisher.HEADER_SIZE;
+            System.Array.Copy(_buffer, totalOffset, result, 0, size);
+            return result;
+        }
+
         public object ParseObject()
         {
             if (_object == null)
             {
-                BinaryFormatter formatter = new BinaryFormatter();
                 int bodySize = _currentHeader->BodySize;
+                if (bodySize == 0)
+                {
+                    return null;
+                }
+                BinaryFormatter formatter = new BinaryFormatter();
                 int topicSize = _currentHeader->TopicSize;
                 int totalOffset = _offset + topicSize + TopicPublisher.HEADER_SIZE;
                 MemoryStream stream = new MemoryStream(_buffer, totalOffset, bodySize);
