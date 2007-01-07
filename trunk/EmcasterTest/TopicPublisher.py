@@ -15,7 +15,7 @@ address = "224.0.0.23"
 port = 8001
 
 sendSocket = PgmSource(address, port)
-sendSocket.RateKbitsPerSec = 75000
+sendSocket.RateKbitsPerSec = 100000
 sendSocket.WindowSizeInMSecs = 2000
 sendSocket.WindowSizeinBytes = 0
 
