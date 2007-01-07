@@ -1,6 +1,6 @@
 = Introduction =
 
-Achieving maximum throughput often takes a fair amount of research and tweaking. With modest production hardware and a gigabit network you should expect to be able to send at rates over 500 megabit per second. Generally, smaller messages require more CPU and larger messages require more bandwidth. Smaller messages result in higher message rates (100's of k per second), while larger messages use more bandwidth.
+Achieving maximum throughput often takes a fair amount of research and tweaking. With modest production hardware and a gigabit network you should expect to be able to send at rates over 500 megabit per second. Generally, smaller messages require more CPU and larger messages require more bandwidth. Smaller messages result in higher message rates (100's of k per second), while larger messages use more bandwidth. With larger messages, make sure the all buffers (write and read) are sized large enough to accommodate the message. Emcaster does not break apart and reassemble messages.
 
 === Serialization ===
 
