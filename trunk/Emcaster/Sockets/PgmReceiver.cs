@@ -53,7 +53,10 @@ namespace Emcaster.Sockets
             PgmSocket.EnableGigabit(_socket);
             _socket.Listen(5);
             log.Info("Listening: " + end);
-            ThreadPool.QueueUserWorkItem(RunAccept);
+            if (!ThreadPool.QueueUserWorkItem(RunAccept))
+            {
+                log.Error("Not able to enqueue accept delegate in thread pool.");
+            }
         }
 
         private void RunAccept(object state)
@@ -65,7 +68,10 @@ namespace Emcaster.Sockets
                     Socket conn = _socket.Accept();
                     log.Info("Connection from: " + conn.RemoteEndPoint);
                     WaitCallback runner = delegate { RunReceiver(conn); };
-                    ThreadPool.QueueUserWorkItem(runner);
+                    if (!ThreadPool.QueueUserWorkItem(runner))
+                    {
+                        log.Error("Unable to Enqueue PGM Receiver");
+                    }
                 }
                 catch (Exception failed)
                 {
