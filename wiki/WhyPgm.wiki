@@ -3,7 +3,7 @@ Emcaster is a _reliable_ messaging framework. It provides at most once delivery 
 PGM provides an ideal transport for reliable messaging.
 
   * In Order Delivery - The protocol will order messages if the messages arrive out of order
-  * NAK based messaging - If a message is missed, the source will request a repair packet.
+  * NAK based messaging - If a message is missed, the receiver will request a repair packet.
   * Multicast - Supports multiple consumers
 
 == How Reliable? ==
