@@ -28,6 +28,7 @@ namespace Emcaster.Sockets
         private long _flushedBytes = 0;
         private long _flushes = 0;
         private long _sleepTime = 0;
+        private int _alwaysSleep = -1;
 
         public AsyncByteWriter(PgmSource pubber, int maxBufferSizeInBytes)
             : this(pubber.Socket, maxBufferSizeInBytes)
@@ -52,6 +53,12 @@ namespace Emcaster.Sockets
         {
             set { _minFlushSize = value; }
             get { return _minFlushSize; }
+        }
+
+        public int AlwaysSleep
+        {
+            set { _alwaysSleep = value; }
+            get { return _alwaysSleep;  }
         }
 
         public bool PrintStats
@@ -135,12 +142,20 @@ namespace Emcaster.Sockets
                 }
                 if (length < _minFlushSize)
                 {
-                    Thread.Sleep(_sleepOnMin);
-                    if (_printStats)
-                    {
-                        _sleepTime += _sleepOnMin;
-                    }
+                    Sleep(_sleepOnMin);
+                }else if(_alwaysSleep >=0)
+                {
+                    Sleep(_alwaysSleep);
                 }
+            }
+        }
+
+        private void Sleep(int sleep)
+        {
+            Thread.Sleep(sleep);
+            if (_printStats)
+            {
+                _sleepTime += sleep;
             }
         }
 
