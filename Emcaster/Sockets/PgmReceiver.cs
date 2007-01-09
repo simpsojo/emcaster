@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.Collections.Generic;
 using Common.Logging;
 
 namespace Emcaster.Sockets
@@ -18,6 +19,7 @@ namespace Emcaster.Sockets
         private PgmSocket _socket;
         private ISourceReader _reader;
         private int _receiveBufferInBytes = 1024*128;
+        private IList<uint> _interfaceAddresses = new List<uint>();
 
         public PgmReceiver(string address, int port, ISourceReader reader)
         {
@@ -25,6 +27,15 @@ namespace Emcaster.Sockets
             _ip = address;
             _port = port;
             _reader = reader;
+        }
+
+        /// <summary>
+        /// Set the address for binding the socket
+        /// </summary>
+        public void AddInterfaceAddress(string address)
+        {
+            IPAddress ip = IPAddress.Parse(address);
+            _interfaceAddresses.Add((uint)ip.Address);
         }
 
         public string Address
@@ -49,6 +60,12 @@ namespace Emcaster.Sockets
             IPAddress ipAddr = IPAddress.Parse(_ip);
             IPEndPoint end = new IPEndPoint(ipAddr, _port);
             _socket.Bind(end);
+            foreach(uint address in _interfaceAddresses)
+            {
+                byte[] bits = BitConverter.GetBytes(address);
+                _socket.SetPgmOption(PgmConstants.RM_ADD_RECEIVE_IF, bits); 
+ 
+            }
             _socket.ApplySocketOptions();
             PgmSocket.EnableGigabit(_socket);
             _socket.Listen(5);
