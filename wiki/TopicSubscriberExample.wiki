@@ -16,3 +16,21 @@ receiveSocket.Start();
 
 == Your Delegate Method ==
 Your method should be thread safe. With multiple sources, the method will be called from multiple threads. Also, do not retain a reference the parser object since it is reused between objects. 
+
+= Topic Queue Subscriber =
+Currently, only available in [http://emcaster.googlecode.com/svn/trunk/Emcaster/Topics/TopicQueueSubscriber.cs SVN]. 
+
+A Topic Queue Subscription enqueues messages in a single capped queue. This makes it easy to process messages in batch. The Dequeue method is thread safe, so with a multi-core machine, multiple threads can be used to process cpu intensive messages. 
+
+{{{
+TopicSubscriber topic= ... create a subscriber
+topic.Start();
+int maxQueueSize = 100000;
+TopicQueueSubscriber queue = new TopicQueueSubscriber(topic, maxQueueSize);
+while(true)
+{
+   int maxTimeToWaitForMessage = 1000;
+   List<IMessageParser> msgBatch = queue.Dequeue(maxTimeToWaitForMessage);
+   ... do something with messages
+}
+}}}
