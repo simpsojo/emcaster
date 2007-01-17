@@ -52,14 +52,17 @@
     <Compile Include="Sockets\PgmReceiver.cs" />
     <Compile Include="Sockets\AsyncByteWriter.cs" />
     <Compile Include="Sockets\SourceReader.cs" />
+    <Compile Include="Topics\ByteMessageParser.cs" />
     <Compile Include="Topics\IMessageEvent.cs" />
     <Compile Include="Topics\IMessageListener.cs" />
     <Compile Include="Topics\IMessageParser.cs" />
+    <Compile Include="Topics\ITopicSubscriber.cs" />
     <Compile Include="Topics\MessageHeader.cs" />
     <Compile Include="Topics\MessageParser.cs" />
     <Compile Include="Topics\MessageParserFactory.cs" />
     <Compile Include="Topics\TopicMonitor.cs" />
     <Compile Include="Topics\TopicPublisher.cs" />
+    <Compile Include="Topics\TopicQueueSubscriber.cs" />
     <Compile Include="Topics\TopicSubscriber.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
