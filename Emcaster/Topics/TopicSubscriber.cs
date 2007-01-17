@@ -3,9 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace Emcaster.Topics
 {
-    public delegate void OnTopicMessage(IMessageParser parser);
-
-    public class TopicSubscriber : IDisposable
+    public class TopicSubscriber : IDisposable, ITopicSubscriber
     {
         public event OnTopicMessage TopicMessageEvent;
 
