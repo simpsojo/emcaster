@@ -1,4 +1,4 @@
-Message Queuing 3.0 must be installed and running on computers that will be sending and receiving messages using Emcaster. MSMQ installs PGM as a dependency.
+Message Queuing 3.0 must be installed and running on computers that will be sending and receiving messages using Emcaster. MSMQ installs PGM as a dependency. Emcaster does not use MSMQ, only PGM.  MSMQ conveniently installs PGM.
 
 == Steps ==
 
