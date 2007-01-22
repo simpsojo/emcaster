@@ -1,10 +1,6 @@
 namespace Emcaster.Topics
 {
-    public interface IMessageParser
+    public interface IMessageParser: ITopicMessage
     {
-        string Topic { get; }
-
-        object ParseObject();
-        byte[] ParseBytes();
     }
 }
