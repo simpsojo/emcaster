@@ -11,7 +11,7 @@ namespace Emcaster.Topics
         private readonly object _lock = new object();
 
         private readonly ITopicSubscriber _topic;
-        private List<IMessageParser> _msgQueue = new List<IMessageParser>();
+        private List<ITopicMessage> _msgQueue = new List<ITopicMessage>();
         private readonly int _maxSize;
 
         public TopicQueueSubscriber(ITopicSubscriber topic, int maxSize)
@@ -59,21 +59,21 @@ namespace Emcaster.Topics
         /// </summary>
         /// <param name="waitTimeMs"></param>
         /// <returns></returns>
-        public IList<IMessageParser> Dequeue(int waitTimeMs)
+        public IList<ITopicMessage> Dequeue(int waitTimeMs)
         {
             lock (_lock)
             {
                 if (_msgQueue.Count > 0)
                 {
-                    IList<IMessageParser> toReturn = _msgQueue;
-                    _msgQueue = new List<IMessageParser>();
+                    IList<ITopicMessage> toReturn = _msgQueue;
+                    _msgQueue = new List<ITopicMessage>();
                     return toReturn;
                 }
                 else
                 {
                     Monitor.Wait(_lock, waitTimeMs);
-                    IList<IMessageParser> toReturn = _msgQueue;
-                    _msgQueue = new List<IMessageParser>();
+                    IList<ITopicMessage> toReturn = _msgQueue;
+                    _msgQueue = new List<ITopicMessage>();
                     return toReturn;
                 }
             }
