@@ -45,6 +45,7 @@
     <Compile Include="Sockets\IByteParser.cs" />
     <Compile Include="Sockets\IByteWriter.cs" />
     <Compile Include="Sockets\IByteParserFactory.cs" />
+    <Compile Include="Sockets\IPacketEvent.cs" />
     <Compile Include="Sockets\ISourceReader.cs" />
     <Compile Include="Sockets\PgmConstants.cs" />
     <Compile Include="Sockets\PgmSource.cs" />

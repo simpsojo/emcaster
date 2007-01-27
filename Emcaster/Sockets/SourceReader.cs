@@ -4,9 +4,12 @@ using Common.Logging;
 
 namespace Emcaster.Sockets
 {
-    public class SourceReader : ISourceReader
+
+    public class SourceReader : ISourceReader, IPacketEvent
     {
         private static readonly ILog log = LogManager.GetLogger(typeof (SourceReader));
+
+        public event OnReceive ReceiveEvent;
 
         private readonly IByteParserFactory _parserFactory;
 
@@ -14,6 +17,8 @@ namespace Emcaster.Sockets
         private int _readBuffer = 1024*130;
         private bool _forceBlockingOnEveryReceive = false;
 
+        public event OnSocketException SocketExceptionEvent;
+        public event OnException ExceptionEvent;
 
         public SourceReader(IByteParserFactory factory)
         {
@@ -61,6 +66,11 @@ namespace Emcaster.Sockets
                     int read = receiveSocket.Receive(buffer, 0, _readBuffer, SocketFlags.None);
                     while (read > 0 && _running)
                     {
+                        OnReceive recv = ReceiveEvent;
+                        if (recv != null)
+                        {
+                            recv(buffer, 0, read);
+                        }
                         parser.OnBytes(buffer, 0, read);
                         if (_forceBlockingOnEveryReceive)
                         {
@@ -74,10 +84,20 @@ namespace Emcaster.Sockets
                     log.Info("Native Error: " + socketFailed.NativeErrorCode);
                     log.Info("Socket Error Code: " + socketFailed.SocketErrorCode);
                     log.Info("Socket Error: " + socketFailed.ErrorCode, socketFailed);
+                    OnSocketException socketExc = SocketExceptionEvent;
+                    if (socketExc != null)
+                    {
+                        socketExc(receiveSocket, socketFailed);
+                    }
                 }
                 catch (Exception failed)
                 {
                     log.Info("Unknown Exception", failed);
+                    OnException excEvent = ExceptionEvent;
+                    if (excEvent != null)
+                    {
+                        excEvent(receiveSocket, failed);
+                    }
                 }
             }
         }
