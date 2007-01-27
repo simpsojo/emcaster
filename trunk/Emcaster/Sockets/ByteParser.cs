@@ -2,7 +2,7 @@ using System.Net.Sockets;
 
 namespace Emcaster.Sockets
 {
-    public class ByteParser : IByteParserFactory, IByteParser
+    public class ByteParser : IByteParserFactory, IByteParser, IPacketEvent
     {
         public event OnReceive ReceiveEvent;
 
