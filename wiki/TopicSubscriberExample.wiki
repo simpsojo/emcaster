@@ -5,7 +5,7 @@ using Emcaster.Sockets;
 using Emcaster.Topics;
 
 MessageParserFactory msgParser = new MessageParserFactory();
-SourceReader reader = new SourceReader(msgParser);
+PgmReader reader = new PgmReader(msgParser);
 PgmReceiver receiveSocket = new PgmReceiver("224.0.0.23", 7272, reader);
 
 TopicSubscriber topicSubscriber = new TopicSubscriber("Stock-Quotes-AAPL", msgParser);
