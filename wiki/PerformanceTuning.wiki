@@ -10,7 +10,7 @@ The Emcaster TopicPublisher object provides methods for publishing objects or ra
 
 
 === Batching ===
-Emcaster automatically batches outgoing messages to optimize network writes. A separate thread is used to flush the bytes to the network. The AsyncByteWriter class contains several  methods that may need to be tweaked for hardware and network differences.
+Emcaster automatically batches outgoing messages to optimize network writes. A separate thread is used to flush the bytes to the network. The BatchWriter class contains several  methods that may need to be tweaked for hardware and network differences.
   * [http://emcaster.googlecode.com/svn/trunk/Emcaster/Sockets/BatchWriter.cs BatchWriter] 
 
 Also stats can be logged to help determine bottlenecks.
