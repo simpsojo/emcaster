@@ -31,7 +31,7 @@ class Receiver:
 	
 	def dispose(self):
 		if(self.socket):
-			self.Socket.Dispose()
+			self.socket.Dispose()
 		self.monitor.Dispose()
 
 receiver = Receiver()
