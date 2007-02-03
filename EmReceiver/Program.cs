@@ -25,7 +25,7 @@ namespace Emcaster.EmReceiver
             LogManager.Adapter = logger;
 
             MessageParserFactory msgParser = new MessageParserFactory();
-            SourceReader reader = new SourceReader(msgParser);
+            PgmReader reader = new PgmReader(msgParser);
             int port = int.Parse(args[1]);
             PgmReceiver receiveSocket = new PgmReceiver(args[0], port, reader);
 

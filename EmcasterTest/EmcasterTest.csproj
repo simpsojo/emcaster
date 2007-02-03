@@ -54,6 +54,7 @@
     <Compile Include="Topics\MessageParserTests.cs" />
     <Compile Include="Topics\TopicPublisherTests.cs" />
     <Compile Include="Topics\TopicQueueSubscriberTests.cs" />
+    <Compile Include="WmiReceiverStats.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="TopicPublisher.py">

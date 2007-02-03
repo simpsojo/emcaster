@@ -52,7 +52,9 @@
     <Compile Include="Sockets\PgmSocket.cs" />
     <Compile Include="Sockets\PgmReceiver.cs" />
     <Compile Include="Sockets\AsyncByteWriter.cs" />
-    <Compile Include="Sockets\SourceReader.cs" />
+    <Compile Include="Sockets\PgmReader.cs" />
+    <Compile Include="Sockets\UdpReceiver.cs" />
+    <Compile Include="Sockets\UdpSource.cs" />
     <Compile Include="Topics\ByteMessageParser.cs" />
     <Compile Include="Topics\IMessageEvent.cs" />
     <Compile Include="Topics\IMessageListener.cs" />
