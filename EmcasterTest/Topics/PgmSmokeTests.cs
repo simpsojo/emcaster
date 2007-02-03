@@ -32,7 +32,7 @@ namespace EmcasterTest.Explicit
 
             PgmSource sendSocket = new PgmSource("224.0.0.23", 40001);
             sendSocket.Start();
-            AsyncByteWriter asyncWriter = new AsyncByteWriter(sendSocket, 1024 * 64);
+            BatchWriter asyncWriter = new BatchWriter(sendSocket, 1024 * 64);
             TopicPublisher topicPublisher = new TopicPublisher(asyncWriter);
             topicPublisher.Start();
 

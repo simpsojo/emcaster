@@ -8,9 +8,9 @@ namespace Emcaster.Sockets
     /// <summary>
     /// Writes bytes to a pending buffer. Thread safe for several writing threads.
     /// </summary>
-    public class AsyncByteWriter : IByteWriter
+    public class BatchWriter : IByteWriter
     {
-        private static ILog log = LogManager.GetLogger(typeof (AsyncByteWriter));
+        private static ILog log = LogManager.GetLogger(typeof (BatchWriter));
 
         private object _lock = new object();
 
@@ -30,7 +30,7 @@ namespace Emcaster.Sockets
         private long _sleepTime = 0;
         private int _alwaysSleep = -1;
 
-        public AsyncByteWriter(IByteWriter target, int maxBufferSizeInBytes)
+        public BatchWriter(IByteWriter target, int maxBufferSizeInBytes)
         {  
             _target = target;
             _pendingBuffer = new ByteBuffer(maxBufferSizeInBytes);
