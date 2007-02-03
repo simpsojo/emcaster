@@ -52,21 +52,17 @@
     <Compile Include="Startup.cs" />
     <Compile Include="Topics\MessageHeaderTests.cs" />
     <Compile Include="Topics\MessageParserTests.cs" />
+    <Compile Include="Topics\PgmSmokeTests.cs" />
     <Compile Include="Topics\TopicPublisherTests.cs" />
     <Compile Include="Topics\TopicQueueSubscriberTests.cs" />
+    <Compile Include="Topics\UdpSmokeTests.cs" />
     <Compile Include="WmiReceiverStats.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="TopicPublisher.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SmokeTest.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="TopicReceiver.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TopicsSmokeTest.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

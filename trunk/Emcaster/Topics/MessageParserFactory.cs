@@ -20,5 +20,10 @@ namespace Emcaster.Topics
                 msg(parser);
             }
         }
+
+        public MessageParser Create()
+        {
+            return new MessageParser(this);    
+        }
     }
 }
