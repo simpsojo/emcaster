@@ -51,7 +51,7 @@
     <Compile Include="Sockets\PgmSource.cs" />
     <Compile Include="Sockets\PgmSocket.cs" />
     <Compile Include="Sockets\PgmReceiver.cs" />
-    <Compile Include="Sockets\AsyncByteWriter.cs" />
+    <Compile Include="Sockets\BatchWriter.cs" />
     <Compile Include="Sockets\PgmReader.cs" />
     <Compile Include="Sockets\UdpReceiver.cs" />
     <Compile Include="Sockets\UdpSource.cs" />

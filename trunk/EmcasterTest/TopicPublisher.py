@@ -26,7 +26,7 @@ class Sender:
 	
 	def start(self):
 		self.socket.Start()
-		asyncWriter = AsyncByteWriter(self.socket, self.batch_buffer)
+		asyncWriter = BatchWriter(self.socket, self.batch_buffer)
 		asyncWriter.PrintStats = printStats
 		asyncWriter.SleepOnMin = 0
 		self.publisher = TopicPublisher(asyncWriter);

@@ -33,7 +33,7 @@ namespace EmcasterTest.Explicit
 
             UdpSource sendSocket = new UdpSource("224.0.0.23", 40001);
             sendSocket.Start();
-            AsyncByteWriter asyncWriter = new AsyncByteWriter(sendSocket, 1500);
+            BatchWriter asyncWriter = new BatchWriter(sendSocket, 1500);
             TopicPublisher topicPublisher = new TopicPublisher(asyncWriter);
             topicPublisher.Start();
 
