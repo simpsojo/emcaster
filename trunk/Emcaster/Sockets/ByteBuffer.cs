@@ -19,6 +19,11 @@ namespace Emcaster.Sockets
             _position += length;
         }
 
+        public bool WriteTo(IByteWriter writer)
+        {
+            return writer.Write(_buffer, 0, _position, 0);
+        }
+
         public int WriteTo(Socket socket, SocketFlags flags)
         {
             return socket.Send(_buffer, 0, _position, flags);

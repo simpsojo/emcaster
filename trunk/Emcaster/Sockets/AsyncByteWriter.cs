@@ -16,7 +16,7 @@ namespace Emcaster.Sockets
 
         private ByteBuffer _pendingBuffer;
         private ByteBuffer _flushBuffer;
-        private Socket _target;
+        private IByteWriter _target;
         private bool _running = true;
         private int _minFlushSize = 1024*10;
         private int _sleepOnMin = 10;
@@ -30,13 +30,8 @@ namespace Emcaster.Sockets
         private long _sleepTime = 0;
         private int _alwaysSleep = -1;
 
-        public AsyncByteWriter(PgmSource pubber, int maxBufferSizeInBytes)
-            : this(pubber.Socket, maxBufferSizeInBytes)
-        {
-        }
-
-        public AsyncByteWriter(Socket target, int maxBufferSizeInBytes)
-        {
+        public AsyncByteWriter(IByteWriter target, int maxBufferSizeInBytes)
+        {  
             _target = target;
             _pendingBuffer = new ByteBuffer(maxBufferSizeInBytes);
             _flushBuffer = new ByteBuffer(maxBufferSizeInBytes);
@@ -128,7 +123,7 @@ namespace Emcaster.Sockets
             {
                 try
                 {
-                    _flushBuffer.WriteTo(_target, SocketFlags.None);
+                    _flushBuffer.WriteTo(_target);
                 }
                 catch (Exception failed)
                 {

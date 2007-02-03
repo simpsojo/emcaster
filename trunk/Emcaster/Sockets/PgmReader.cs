@@ -5,9 +5,9 @@ using Common.Logging;
 namespace Emcaster.Sockets
 {
 
-    public class SourceReader : ISourceReader, IPacketEvent
+    public class PgmReader : ISourceReader, IPacketEvent
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof (SourceReader));
+        private static readonly ILog log = LogManager.GetLogger(typeof (PgmReader));
 
         public event OnReceive ReceiveEvent;
 
@@ -20,7 +20,7 @@ namespace Emcaster.Sockets
         public event OnSocketException SocketExceptionEvent;
         public event OnException ExceptionEvent;
 
-        public SourceReader(IByteParserFactory factory)
+        public PgmReader(IByteParserFactory factory)
         {
             _parserFactory = factory;
         }
