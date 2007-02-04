@@ -1,6 +1,6 @@
 === Topics ===
 
-Topics with Emcaster are just strings. They can be any length and are encoded in UTF-8 for transport. The topic could be the entire content of the message (e.g. stock-quote-aapl-85.05). Clients can then selectively receive messages based upon the a regular expression.
+Topics with Emcaster are just strings. They can be any length and are encoded in UTF-8 for transport. The topic could be the entire content of the message (e.g. stock-quote-aapl-85.05). Clients can selectively receive messages based upon regular expressions.
 
 === Topic Filtering ===
 
