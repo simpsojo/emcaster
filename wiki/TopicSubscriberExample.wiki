@@ -1,5 +1,7 @@
 = Topic Subscriber=
 
+To receive messages, the subscriber must be listening on the same multicast address and port as the source. The TopicSubscriber class subscribes to the EmcasterTopic with a regular expression.
+
 {{{
 using Emcaster.Sockets;
 using Emcaster.Topics;
