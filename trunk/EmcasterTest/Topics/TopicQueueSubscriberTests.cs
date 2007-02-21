@@ -18,7 +18,7 @@ namespace EmcasterTest.Topics
                 OnTopicMessage onData = TopicMessageEvent;
                 if (onData != null)
                 {
-                    onData(new ByteMessageParser(topic, msg));
+                    onData(new ByteMessageParser(topic, msg, null));
                 }
            }
         }

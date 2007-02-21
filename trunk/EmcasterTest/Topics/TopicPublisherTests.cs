@@ -24,7 +24,7 @@ namespace EmcasterTest.Topics
 
             WriteDelegate doMessage = delegate(byte[] data, int offset, int length, int wait)
                                           {
-                                              parser.ParseBytes(data, offset, length);
+                                              parser.ParseBytes(null, data, offset, length);
                                               return true;
                                           };
             MockRepository mocks = new MockRepository();

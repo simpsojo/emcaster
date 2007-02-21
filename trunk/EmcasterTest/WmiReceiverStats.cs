@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Net;
 
 namespace Emcaster.Sockets
 {
@@ -81,7 +82,7 @@ namespace Emcaster.Sockets
             _socketExcCounter.Increment();
         }
 
-        private void OnBytes(byte[] data, int offset, int length)
+        private void OnBytes(EndPoint endpoint, byte[] data, int offset, int length)
         {
             _packetCounter.Increment();
             _byteCounter.IncrementBy(length);
