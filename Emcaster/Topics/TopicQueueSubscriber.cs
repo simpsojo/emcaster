@@ -32,7 +32,7 @@ namespace Emcaster.Topics
 
         private void OnMessage(IMessageParser parser)
         {
-            ByteMessageParser bytes = new ByteMessageParser(parser.Topic, parser.ParseBytes());
+            ByteMessageParser bytes = new ByteMessageParser(parser.Topic, parser.ParseBytes(), parser.EndPoint);
             bool discard = false;
             lock (_lock)
             {

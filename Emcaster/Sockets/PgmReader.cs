@@ -1,6 +1,7 @@
 using System;
 using System.Net.Sockets;
 using Common.Logging;
+using System.Net;
 
 namespace Emcaster.Sockets
 {
@@ -53,6 +54,7 @@ namespace Emcaster.Sockets
             IByteParser parser = _parserFactory.Create(receiveSocket);
             using (receiveSocket)
             {
+                EndPoint endpoint = receiveSocket.RemoteEndPoint;
                 PgmSocket.EnableGigabit(receiveSocket);
                 if (_receiveBufferSize > 0)
                 {
@@ -69,9 +71,9 @@ namespace Emcaster.Sockets
                         OnReceive recv = ReceiveEvent;
                         if (recv != null)
                         {
-                            recv(buffer, 0, read);
+                            recv(endpoint, buffer, 0, read);
                         }
-                        parser.OnBytes(buffer, 0, read);
+                        parser.OnBytes(endpoint, buffer, 0, read);
                         if (_forceBlockingOnEveryReceive)
                         {
                             receiveSocket.Blocking = true;

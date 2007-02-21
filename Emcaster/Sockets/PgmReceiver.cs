@@ -7,7 +7,7 @@ using Common.Logging;
 
 namespace Emcaster.Sockets
 {
-    public delegate void OnReceive(byte[] data, int offset, int length);
+    public delegate void OnReceive(EndPoint endPoint, byte[] data, int offset, int length);
 
     public class PgmReceiver : IDisposable
     {

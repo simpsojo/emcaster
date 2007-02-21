@@ -1,4 +1,5 @@
 using System.Net.Sockets;
+using System.Net;
 
 namespace Emcaster.Sockets
 {
@@ -11,12 +12,12 @@ namespace Emcaster.Sockets
             return this;
         }
 
-        public void OnBytes(byte[] data, int offset, int length)
+        public void OnBytes(EndPoint endpoint, byte[] data, int offset, int length)
         {
             OnReceive onMsg = ReceiveEvent;
             if (onMsg != null)
             {
-                onMsg(data, offset, length);
+                onMsg(endpoint, data, offset, length);
             }
         }
     }

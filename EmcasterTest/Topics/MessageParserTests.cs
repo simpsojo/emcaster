@@ -20,7 +20,7 @@ namespace EmcasterTest.Topics
             factory.MessageEvent += delegate { msgCount++; };
             for (int i = 0; i < 10000; i++)
             {
-                parser.OnBytes(data, 0, data.Length);
+                parser.OnBytes(null, data, 0, data.Length);
                 Assert.AreEqual((i + 1)*10, msgCount);
             }
         }
@@ -39,7 +39,7 @@ namespace EmcasterTest.Topics
          
             byte[] body = encoder.GetBytes("body");
             byte[] data = TopicPublisher.CreateMessage("test", body, 0, body.Length, encoder);
-            parser.OnBytes(data, 0, data.Length);
+            parser.OnBytes(null, data, 0, data.Length);
 
             Assert.AreEqual("body", encoder.GetString(result));
         }
@@ -66,7 +66,7 @@ namespace EmcasterTest.Topics
             int loopCount = 5000;
             for (int i = 0; i < loopCount; i++)
             {
-                parser.OnBytes(data, 0, data.Length);
+                parser.OnBytes(null, data, 0, data.Length);
             }
             TimeSpan time = DateTime.Now.Subtract(start);
             double avgMsg = (msgCount)/time.TotalSeconds;

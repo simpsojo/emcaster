@@ -2,6 +2,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using Emcaster.Sockets;
+using System.Net;
 
 namespace Emcaster.Topics
 {
@@ -15,12 +16,17 @@ namespace Emcaster.Topics
         private byte[] _buffer;
         private readonly IMessageListener _listener;
         private MessageHeader* _currentHeader;
+        private EndPoint _endPoint;
 
         public MessageParser(IMessageListener listener)
         {
             _listener = listener;
         }
 
+        public EndPoint EndPoint
+        {
+            get { return _endPoint; }
+        }
     
         public string Topic
         {
@@ -67,14 +73,15 @@ namespace Emcaster.Topics
             return _object;
         }
 
-        public void OnBytes(byte[] data, int offset, int length)
+        public void OnBytes(EndPoint endpoint, byte[] data, int offset, int length)
         {
-            ParseBytes(data, offset, length);
+            ParseBytes(endpoint, data, offset, length);
         }
 
 
-        public unsafe void ParseBytes(byte[] buffer, int offset, int received)
+        public unsafe void ParseBytes(EndPoint endpoint, byte[] buffer, int offset, int received)
         {
+            _endPoint = EndPoint;
             _buffer = buffer;
             _offset = offset;
             fixed (byte* pArray = buffer)

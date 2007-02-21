@@ -1,11 +1,35 @@
 using Emcaster.Topics;
 using NUnit.Framework;
+using System.Runtime.InteropServices;
 
 namespace EmcasterTest.Topics
 {
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct MyHeader
+    {
+        //public string Topic;
+        //public byte[] body;   
+    }
+
     [TestFixture]
     public class MessageHeaderTests
     {
+        [Test]
+        public unsafe void Serialize()
+        {
+            int size = sizeof(MyHeader);
+            MyHeader header = new MyHeader();
+            //header.Topic ="mytopic";
+            //header.body = new byte[7];
+            //header.body[4] = 6;
+            byte[] result = new byte[size];
+            fixed (byte* pBytes = &result[0])
+            {
+                *((MyHeader*)pBytes) = header;
+            }
+
+        }
+
         [Test]
         public unsafe void Buffer()
         {
