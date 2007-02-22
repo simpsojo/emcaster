@@ -1,2 +1,3 @@
-= [http://emcaster.googlecode.com/files/Emcaster.0.1.3.zip Beta 0.1.3] =
+= Beta 0.1.3 =
+  * [http://emcaster.googlecode.com/files/Emcaster.0.1.3.zip Download]
   * Added EndPoint to message interface
