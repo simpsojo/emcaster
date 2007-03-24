@@ -1,0 +1,22 @@
+= Introduction =
+
+Emcaster is a reliable multicast library written in c#. It can be configured to use [http://en.wikipedia.org/wiki/Pragmatic_General_Multicast Pragmatic General Multicast (PGM)] for reliable multicast or regular Udp Multicast.
+
+= Dependencies =
+
+  * [http://www.microsoft.com/net/default.mspx .NET 2.0 or later]
+  * [http://www.microsoft.com/windowsserver2003/technologies/msmq/default.mspx MSMQ 3.0] - InstallMsmq - Installs Pgm as a dependency. Not required for plain Udp Multicast.
+  * Windows 2000, Windows 2003, Windows XP
+  * [http://springframework.net/doc-latest/reference/html/ch13.html Common Logging from Spring]
+
+= Features =
+  * EmcasterTopics with Regex based Matching
+  * Unmatched Performance - Over 700 thousand messages per second on commodity hardware with a gigabit network. See PerformanceTuning.
+  * Reliable, In-Order Multicast with PGM - WhyPgm
+
+= Examples =
+
+  * TopicPublisherExample
+  * TopicSubscriberExample
+  * [http://emcaster.googlecode.com/svn/trunk/EmcasterTest/Topics/UdpSmokeTests.cs UdpTest]
+  * [http://emcaster.googlecode.com/svn/trunk/EmcasterTest/Topics/PgmSmokeTests.cs PgmTest]
