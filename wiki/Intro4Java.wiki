@@ -1,0 +1,25 @@
+== Publishing == 
+
+{{{
+		TopicPublisherImpl pub = new TopicPublisherImpl("224.0.0.23", 8001,
+				1024 * 64);
+		pub.start();
+		String msg = "Hello world";
+		pub.publish("test", msg.getBytes());
+
+}}}
+
+== Subscribing == 
+{{{
+		TopicSubscriberImpl sub = new TopicSubscriberImpl(address, port,
+				64 * 1024);
+		sub.start();
+		while (true) {
+			Iterator<Message> iter = sub.readNext();
+			while (iter.hasNext()) {
+				Message msg = iter.next();
+				// process msg
+			}
+		}
+
+}}}
