@@ -19,5 +19,5 @@ Emcaster is a reliable multicast library written in c#. It can be configured to 
 
   * TopicPublisherExample
   * TopicSubscriberExample
-  * [http://emcaster.googlecode.com/svn/trunk/EmcasterTest/Topics/UdpSmokeTests.cs UdpTest]
-  * [http://emcaster.googlecode.com/svn/trunk/EmcasterTest/Topics/PgmSmokeTests.cs PgmTest]
+  * [http://emcaster.googlecode.com/svn/trunk/Emcaster.NET/EmcasterTest/Topics/UdpSmokeTests.cs UdpTest]
+  * [http://emcaster.googlecode.com/svn/trunk/Emcaster.NET/EmcasterTest/Topics/PgmSmokeTests.cs PgmTest]
