@@ -1,5 +1,9 @@
-= Introduction =
+== Wire Format ==
 
-[IntroDotNet Intro for the .NET API]
+Emcaster uses a standard wire format that can be parsed in any language, on any platform.
+
+== API's ==
+
+[IntroDotNet Intro to the .NET API]
 
 [Intro4Java Intro to the Java API]
