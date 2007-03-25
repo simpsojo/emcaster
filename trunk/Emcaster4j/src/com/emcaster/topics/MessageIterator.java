@@ -29,7 +29,6 @@ public class MessageIterator implements Iterator<Message>{
 	}
 
 	public void remove() {
-		// TODO Auto-generated method stub
 		
 	}
 
