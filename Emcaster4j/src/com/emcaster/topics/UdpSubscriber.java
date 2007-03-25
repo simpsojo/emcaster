@@ -8,7 +8,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Iterator;
 
-public class TopicSubscriberImpl implements TopicSubscriber {
+public class UdpSubscriber implements TopicSubscriber {
 
 	private final String _address;
 	private final int _port;
@@ -18,7 +18,7 @@ public class TopicSubscriberImpl implements TopicSubscriber {
 	private final DatagramPacket _packet;
 	private final MessageIterator _iterator;
 	
-	public TopicSubscriberImpl(String address, int port, int bufferSize) throws IOException{
+	public UdpSubscriber(String address, int port, int bufferSize) throws IOException{
 		_address = address;
 		_port = port;
 		_buffer = ByteBuffer.allocate(bufferSize);

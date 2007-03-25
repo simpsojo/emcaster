@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 import com.emcaster.topics.Message;
 import com.emcaster.topics.TopicPublisherImpl;
-import com.emcaster.topics.TopicSubscriberImpl;
+import com.emcaster.topics.UdpSubscriber;
 
 public class Main {
 
@@ -30,7 +30,7 @@ public class Main {
 	}
 
 	private static void receive(String address, int port) throws IOException {
-		TopicSubscriberImpl sub = new TopicSubscriberImpl(address, port,
+		UdpSubscriber sub = new UdpSubscriber(address, port,
 				64 * 1024);
 		sub.start();
 		
@@ -45,7 +45,7 @@ public class Main {
 
 	private static void receivePattern(String address, int port)
 			throws IOException {
-		TopicSubscriberImpl sub = new TopicSubscriberImpl(address, port,
+		UdpSubscriber sub = new UdpSubscriber(address, port,
 				64 * 1024);
 		sub.start();
 		Pattern pattern = Pattern.compile(".*");
