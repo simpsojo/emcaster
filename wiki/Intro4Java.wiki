@@ -1,6 +1,6 @@
-The java API can publish and subscribe to messages over UDP. The messages can be exchanged between .NET and java. PGM is not supported.
+The java API can publish and subscribe to messages over UDP. The messages can be exchanged between .NET and java. PGM is not supported with JAVA.
 
-=Publishing= 
+== Publishing == 
 
 {{{
 TopicPublisherImpl pub = new TopicPublisherImpl("224.0.0.23", 8001,
@@ -10,7 +10,7 @@ String msg = "Hello world";
 pub.publish("test", msg.getBytes());
 }}}
 
-=Subscribing=
+== Subscribing ==
  
 {{{
 TopicSubscriberImpl sub = new TopicSubscriberImpl(address, port,
@@ -23,4 +23,5 @@ while (true) {
 		// process msg
 	}
 }
+
 }}}
