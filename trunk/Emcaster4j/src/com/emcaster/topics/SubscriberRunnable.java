@@ -15,12 +15,21 @@ public class SubscriberRunnable implements Runnable{
 		_parser = parser;		
 	}
 	
+	/**
+	 * determines whether the messages is copied from
+	 * the I/O buffer before passing it to listeners.
+	 * @param b
+	 */
 	public void setCopy(boolean b){
 		_copy = b;
 	}
 
 	public boolean getCopy(){
 		return _copy;
+	}
+	
+	public void add(MessageListener listener){
+		_listeners.add(listener);
 	}
 	
 	public void run(){

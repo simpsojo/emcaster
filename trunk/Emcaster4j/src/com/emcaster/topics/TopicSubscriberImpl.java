@@ -8,7 +8,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Iterator;
 
-public class TopicSubscriberImpl{
+public class TopicSubscriberImpl implements TopicSubscriber {
 
 	private final String _address;
 	private final int _port;

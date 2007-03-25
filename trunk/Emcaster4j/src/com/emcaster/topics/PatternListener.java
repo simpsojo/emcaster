@@ -19,5 +19,4 @@ public class PatternListener implements MessageListener {
 			_listener.onMessage(msg);
 		}
 	}
-
 }
