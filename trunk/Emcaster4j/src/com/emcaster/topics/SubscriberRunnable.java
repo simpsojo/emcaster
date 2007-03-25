@@ -42,15 +42,19 @@ public class SubscriberRunnable implements Runnable{
 	
 	public void dispatchMessages() throws IOException {
 		while(_running){
-			Iterator<Message> msgs = _parser.readNext();
-			while(msgs.hasNext()){
-				Message next = msgs.next();
-				if(_copy){
-					next = next.copy();
-				}
-				for (MessageListener listener : _listeners) {
-					listener.onMessage(next);
-				}
+			dispatchNext();
+		}
+	}
+
+	void dispatchNext() throws IOException {
+		Iterator<Message> msgs = _parser.readNext();
+		while(msgs.hasNext()){
+			Message next = msgs.next();
+			if(_copy){
+				next = next.copy();
+			}
+			for (MessageListener listener : _listeners) {
+				listener.onMessage(next);
 			}
 		}
 	}	

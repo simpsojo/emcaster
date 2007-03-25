@@ -3,12 +3,13 @@ package com.emcaster.topics;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
 public class RoundTripTest extends TestCase {
 
-	private static void readNext(final TopicSubscriberImpl subscriber, final ArrayList<Message> msg) {
+	private static void readNext(final UdpSubscriber subscriber, final ArrayList<Message> msg) {
 		Iterator<Message> iter = null;
 		try {
 			iter = subscriber.readNext();
@@ -24,24 +25,36 @@ public class RoundTripTest extends TestCase {
 	public void testSendAndReceive() throws Exception{
 		String address = "224.0.0.23";
 		int port = 8001;
-		final TopicSubscriberImpl subscriber = new TopicSubscriberImpl(address, port,1024);
+		final UdpSubscriber subscriber = new UdpSubscriber(address, port,1024);
 		subscriber.start();
 		final ArrayList<Message> list = new ArrayList<Message>();
-		Runnable runner = new Runnable(){
+		MessageListener runner = new MessageListener(){
+			public void onMessage(Message msg) {
+				list.add(msg);
+			}
+		};
+
+		Pattern pattern = Pattern.compile("topic.*");
+		PatternListener patternListener = new PatternListener(pattern, runner);
+		final SubscriberRunnable runnable = new SubscriberRunnable(subscriber);
+		runnable.add(patternListener);
+		Runnable run = new Runnable(){
 			public void run() {
-				readNext(subscriber, list);
-				readNext(subscriber, list);
 				try {
+					runnable.dispatchNext();
+					runnable.dispatchNext();
+					runnable.dispatchNext();
 					subscriber.stop();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
 		};
-		Thread thread = new Thread(runner);
+		Thread thread = new Thread(run);
 		thread.start();
 		TopicPublisherImpl publisher = new TopicPublisherImpl(address, port, 1024);
 		publisher.start();
+		publisher.publish("no match", "msg 0".getBytes());
 		publisher.publish("topic 1", "msg 1".getBytes());
 		publisher.publish("topic 2", "msg 2".getBytes());
 		publisher.stop();
