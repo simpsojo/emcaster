@@ -41,7 +41,7 @@ public class MessageBuffer {
 	}
 	
 	public boolean appendMessage(String topic, byte[] msg, int offset, int length) {		
-		if(!MessageParserImpl.WriteToBuffer(topic, msg, offset, length, _buffer)){
+		if(!MessageParserImpl.writeToBuffer(topic, msg, offset, length, _buffer)){
 			return false;
 		}
 		_packet.setLength(_buffer.position());

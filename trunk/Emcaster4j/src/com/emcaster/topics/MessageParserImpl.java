@@ -19,10 +19,13 @@ public class MessageParserImpl implements MessageParser, Message {
 		_packet = packet;
 	}
 
-	public static boolean WriteToBuffer(String topic, byte[] message, int offset,
+	public static boolean writeToBuffer(String topic, byte[] message, int offset,
 			int length, ByteBuffer buffer) {
 		byte[] topicBytes = topic.getBytes();
 		int totalLength = topicBytes.length + length;
+		if(totalLength > buffer.capacity()){
+			throw new IllegalArgumentException("Message length: " + totalLength + " is greater than the capacity of the buffer: " + buffer.capacity());
+		}
 		if(buffer.position() + totalLength > buffer.capacity()){
 			return false;
 		}
