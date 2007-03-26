@@ -24,6 +24,14 @@ public class MessageBuffer {
 		_packet.setAddress(address);
 	}	
 
+	/**
+	 * Sends the underlying packet to the publisher, then resets the internal
+	 * buffer.
+	 * @param pub
+	 * @param topic
+	 * @param msg
+	 * @return
+	 */
 	public boolean publish(DatagramPacketPublisher pub, String topic, byte[] msg){
 		if(appendMessage(topic, msg, 0, msg.length)){
 			writeTo(pub);
@@ -40,15 +48,26 @@ public class MessageBuffer {
 		return true;
 	}
 	
+	/**
+	 * Writes packet to publisher, then resets buffer.
+	 * @param publisher
+	 */
 	public void writeTo(DatagramPacketPublisher publisher){
 		publisher.publish(_packet);
 		reset();
 	}
 
+	/**
+	 * reset buffer back to the first byte. Called after each send.
+	 */
 	public void reset() {
 		_buffer.rewind();
 	}
 
+	/**
+	 * number of bytes in the message buffer.
+	 * @return
+	 */
 	public int getLength() {
 		return _buffer.position();
 	}

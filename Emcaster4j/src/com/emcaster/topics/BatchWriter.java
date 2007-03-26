@@ -2,6 +2,12 @@ package com.emcaster.topics;
 
 import java.net.InetAddress;
 
+/**
+ * Writes messages to a pending batch that is periodically flushed. The class
+ * is thread safe. Provides optimal performance for small messages.
+ * 
+ * @author mrettig
+ */
 public class BatchWriter implements Runnable {
 
 	private final Object _lock = new Object();
