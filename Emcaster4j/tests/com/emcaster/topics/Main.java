@@ -29,14 +29,13 @@ public class Main {
 			String msg = "msg: " + count;
 			byte[] bytes = msg.getBytes();
 			writer.publish("test", bytes, 0, bytes.length);
-			//pub.publish("test", bytes, 0, bytes.length);
 		}
 	}
 
 	private static void receive(String address, int port) throws IOException {
 		UdpSubscriber sub = new UdpSubscriber(address, port,
 				64 * 1024);
-		sub.start();
+		sub.connect();
 		
 		MessageCounter counter = new MessageCounter();
 		while (true) {
@@ -51,7 +50,7 @@ public class Main {
 			throws IOException {
 		UdpSubscriber sub = new UdpSubscriber(address, port,
 				64 * 1024);
-		sub.start();
+		sub.connect();
 		Pattern pattern = Pattern.compile(".*");
 		MessageListener receiver = new MessageCounter();
 		PatternListener listener = new PatternListener(pattern, receiver);

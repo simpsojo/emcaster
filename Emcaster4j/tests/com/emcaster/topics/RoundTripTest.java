@@ -1,6 +1,5 @@
 package com.emcaster.topics;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -12,7 +11,7 @@ public class RoundTripTest extends TestCase {
 		String address = "224.0.0.23";
 		int port = 8001;
 		final UdpSubscriber subscriber = new UdpSubscriber(address, port, 1024);
-		subscriber.start();
+		subscriber.connect();
 		final ArrayList<Message> list = new ArrayList<Message>();
 		MessageListener runner = new MessageListener() {
 			public void onMessage(Message msg) {
@@ -26,14 +25,10 @@ public class RoundTripTest extends TestCase {
 		runnable.add(patternListener);
 		Runnable run = new Runnable() {
 			public void run() {
-				try {
 					runnable.dispatchNext();
 					runnable.dispatchNext();
 					runnable.dispatchNext();
 					subscriber.stop();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
 			}
 		};
 		Thread thread = new Thread(run);

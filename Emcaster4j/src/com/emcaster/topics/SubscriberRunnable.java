@@ -1,6 +1,5 @@
 package com.emcaster.topics;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -33,20 +32,16 @@ public class SubscriberRunnable implements Runnable{
 	}
 	
 	public void run(){
-		try{
 			dispatchMessages();
-		}catch(Exception failed){
-			throw new RuntimeException(failed);
-		}
 	}
 	
-	public void dispatchMessages() throws IOException {
+	public void dispatchMessages(){
 		while(_running){
 			dispatchNext();
 		}
 	}
 
-	void dispatchNext() throws IOException {
+	void dispatchNext() {
 		Iterator<Message> msgs = _parser.readNext();
 		while(msgs.hasNext()){
 			Message next = msgs.next();
