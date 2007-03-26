@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.regex.Pattern;
 
 import com.emcaster.topics.Message;
-import com.emcaster.topics.TopicPublisherImpl;
+import com.emcaster.topics.UdpPublisher;
 import com.emcaster.topics.UdpSubscriber;
 
 public class Main {
@@ -17,15 +17,19 @@ public class Main {
 		send(address, port);
 	}
 
-	private static void send(String address, int port) throws IOException,
+	private static void send(String address, int port) throws 
 			InterruptedException {
-		TopicPublisherImpl pub = new TopicPublisherImpl(address, port,
-				1024 * 64);
-		pub.start();
+		UdpPublisher pub = new UdpPublisher(address, port);
+		pub.connect();
+		BatchWriter writer = new BatchWriter(1024*25, pub, pub.getAddress(), pub.getPort());
+		Thread thread = new Thread(writer);
+		thread.start();
 		int count = 0;
 		while (true) {
 			String msg = "msg: " + count;
-			pub.publish("test", msg.getBytes());
+			byte[] bytes = msg.getBytes();
+			writer.publish("test", bytes, 0, bytes.length);
+			//pub.publish("test", bytes, 0, bytes.length);
 		}
 	}
 

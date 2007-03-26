@@ -19,13 +19,18 @@ public class MessageParserImpl implements MessageParser, Message {
 		_packet = packet;
 	}
 
-	public static void WriteToBuffer(String topic, byte[] message, int offset,
+	public static boolean WriteToBuffer(String topic, byte[] message, int offset,
 			int length, ByteBuffer buffer) {
 		byte[] topicBytes = topic.getBytes();
+		int totalLength = topicBytes.length + length;
+		if(buffer.position() + totalLength > buffer.capacity()){
+			return false;
+		}
 		buffer.putInt(topicBytes.length);
 		buffer.putInt(message.length);
 		buffer.put(topicBytes);
 		buffer.put(message, offset, length);
+		return true;
 	}
 
 	public InetAddress getAddress(){
