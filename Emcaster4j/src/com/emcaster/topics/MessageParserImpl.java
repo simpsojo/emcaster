@@ -52,7 +52,7 @@ public class MessageParserImpl implements MessageParser, Message {
 		return new MessageImpl(this);
 	}
 	
-	public void parseNextMessage() {
+	public Message parseNextMessage() {
 		int topicLength = _buffer.getInt();
 		int msgLength = _buffer.getInt();
 		byte[] topicBytes = new byte[topicLength];
@@ -60,6 +60,7 @@ public class MessageParserImpl implements MessageParser, Message {
 		_buffer.get(topicBytes);
 		_topic = new String(topicBytes);
 		_buffer.get(_message);
+		return this;
 	}
 	
 	public String getTopic(){

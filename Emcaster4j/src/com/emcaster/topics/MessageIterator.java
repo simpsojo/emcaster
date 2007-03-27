@@ -24,8 +24,7 @@ public class MessageIterator implements Iterator<Message>{
 	}
 
 	public Message next() {
-		_parser.parseNextMessage();
-		return _parser;
+		return _parser.parseNextMessage();
 	}
 
 	public void remove() {
