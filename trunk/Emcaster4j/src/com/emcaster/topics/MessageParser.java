@@ -1,7 +1,7 @@
 package com.emcaster.topics;
 
-public interface MessageParser extends Message{
+public interface MessageParser {
 	
 	int getPosition();
-	void parseNextMessage();
+	Message parseNextMessage();
 }
