@@ -24,7 +24,7 @@ public class MessageParserImpl implements MessageParser, Message {
 	public static boolean writeToBuffer(String topic, byte[] message, int offset,
 			int length, ByteBuffer buffer) {
 		byte[] topicBytes = toBytes(topic);
-		int totalLength = topicBytes.length + length;
+		int totalLength = topicBytes.length + length + 8;
 		if(totalLength > buffer.capacity()){
 			throw new IllegalArgumentException("Message length: " + totalLength + " is greater than the capacity of the buffer: " + buffer.capacity());
 		}
