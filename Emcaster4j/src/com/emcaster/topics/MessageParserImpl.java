@@ -6,6 +6,8 @@ import java.nio.ByteBuffer;
 
 public class MessageParserImpl implements MessageParser, Message {
 
+	public static String STRING_ENCODING = "UTF-8";
+	
 	private final ByteBuffer _buffer;
 
 	private String _topic;
@@ -21,7 +23,7 @@ public class MessageParserImpl implements MessageParser, Message {
 
 	public static boolean writeToBuffer(String topic, byte[] message, int offset,
 			int length, ByteBuffer buffer) {
-		byte[] topicBytes = topic.getBytes();
+		byte[] topicBytes = toBytes(topic);
 		int totalLength = topicBytes.length + length;
 		if(totalLength > buffer.capacity()){
 			throw new IllegalArgumentException("Message length: " + totalLength + " is greater than the capacity of the buffer: " + buffer.capacity());
@@ -34,6 +36,14 @@ public class MessageParserImpl implements MessageParser, Message {
 		buffer.put(topicBytes);
 		buffer.put(message, offset, length);
 		return true;
+	}
+
+	private static byte[] toBytes(String topic) {
+		try{
+			return topic.getBytes(STRING_ENCODING);
+		}catch(Exception failed){
+			throw new RuntimeException(failed);
+		}
 	}
 
 	public InetAddress getAddress(){
@@ -58,11 +68,19 @@ public class MessageParserImpl implements MessageParser, Message {
 		byte[] topicBytes = new byte[topicLength];
 		_message = new byte[msgLength];
 		_buffer.get(topicBytes);
-		_topic = new String(topicBytes);
+		_topic = toString(topicBytes);
 		_buffer.get(_message);
 		return this;
 	}
 	
+	private String toString(byte[] topicBytes) {
+		try{
+			return new String(topicBytes, STRING_ENCODING);
+		}catch(Exception failed){
+			throw new RuntimeException(failed);
+		}
+	}
+
 	public String getTopic(){
 		return _topic;
 	}
