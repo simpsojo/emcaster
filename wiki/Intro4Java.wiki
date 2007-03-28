@@ -1,5 +1,9 @@
 The java API can publish and subscribe to messages over UDP. The messages can be exchanged between .NET and java. PGM is not supported with JAVA.
 
+== Dependencies ==
+
+   * Java 5
+
 == Publishing == 
 
 {{{
