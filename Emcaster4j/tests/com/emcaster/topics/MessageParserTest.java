@@ -7,6 +7,24 @@ import junit.framework.TestCase;
 
 public class MessageParserTest extends TestCase{
 	
+	public void testWriting2Messages()throws Exception{
+		int expectedSize = "1234".getBytes(MessageParserImpl.STRING_ENCODING).length;
+		int packetSize = expectedSize + 8;
+		ByteBuffer buffer = ByteBuffer.allocate(packetSize * 2 );		
+		assertTrue(MessageParserImpl.writeToBuffer("1234", new byte[0], 0,0, buffer));
+		assertTrue(MessageParserImpl.writeToBuffer("1234", new byte[0], 0,0, buffer));
+		assertFalse(MessageParserImpl.writeToBuffer("1234", new byte[0], 0,0, buffer));
+	}
+	
+	public void testWritingOversizedMessages()throws Exception{
+		int expectedSize = "1234".getBytes(MessageParserImpl.STRING_ENCODING).length;
+		int packetSize = expectedSize + 8;
+		ByteBuffer buffer = ByteBuffer.allocate( (packetSize * 2)-1 );		
+		assertTrue(MessageParserImpl.writeToBuffer("1234", new byte[0], 0,0, buffer));
+		assertFalse(MessageParserImpl.writeToBuffer("1234", new byte[0], 0,0, buffer));
+		assertFalse(MessageParserImpl.writeToBuffer("1234", new byte[0], 0,0, buffer));
+	}
+	
 	public void testParsing(){
 		String msg = "test";
 		String topic = "topic";

@@ -25,10 +25,20 @@ public class Main {
 		Thread thread = new Thread(writer);
 		thread.start();
 		int count = 0;
+		long startTime = System.currentTimeMillis();
 		while (true) {
+			count++;
 			String msg = "msg: " + count;
 			byte[] bytes = msg.getBytes();
 			writer.publish("test", bytes, 0, bytes.length);
+			if ((count % 50000) == 0) {
+				long totalTime = System.currentTimeMillis() - startTime;
+				System.out.println("count: " + count);
+				double avg = count / (totalTime / 1000.00);
+				System.out.println("avg/sec: " + avg);
+				count = 0;
+				startTime = System.currentTimeMillis();
+			}
 		}
 	}
 
