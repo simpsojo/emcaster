@@ -13,8 +13,9 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		String address = "224.0.0.23";
 		int port = 8001;
-		// receive(address, port);
-		send(address, port);
+		//receivePattern(address, port);
+		receive(address, port);
+		//send(address, port);
 	}
 
 	private static void send(String address, int port) throws 
@@ -22,16 +23,16 @@ public class Main {
 		UdpPublisher pub = new UdpPublisher(address, port);
 		pub.connect();
 		BatchWriter writer = new BatchWriter(1024*25, pub, pub.getAddress(), pub.getPort());
+		writer.setAfterFlushSleep(0);
 		Thread thread = new Thread(writer);
 		thread.start();
 		int count = 0;
 		long startTime = System.currentTimeMillis();
+		byte[] bytes = new byte[0];
 		while (true) {
 			count++;
-			String msg = "msg: " + count;
-			byte[] bytes = msg.getBytes();
 			writer.publish("test", bytes, 0, bytes.length);
-			if ((count % 50000) == 0) {
+			if ((count % 500000) == 0) {
 				long totalTime = System.currentTimeMillis() - startTime;
 				System.out.println("count: " + count);
 				double avg = count / (totalTime / 1000.00);
