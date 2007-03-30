@@ -12,13 +12,13 @@ Emcaster uses a standard wire format that can be parsed in any language, on any 
 
 Emcaster works with any messsage format. Messages are published as simple byte arrays. These bytes could be an xml document or a raw struct.
 
-If publishing messages across languages or platforms, XML is usually a safe choice. A common approach is to define an explicit message contract with <a href="http://en.wikipedia.org/wiki/Xsd">XSD</a>.
+If publishing messages across languages or platforms, XML is usually a safe choice. A common approach is to define an explicit message contract with [http://en.wikipedia.org/wiki/Xsd XSD].
 
 === .NET XML ===
 In .NET, the XSD tool can be used to generate classes to handle XML serialization.
-   * XSD - <a href="http://msdn2.microsoft.com/en-us/library/x6c1kb0s(VS.80).aspx">MSDN</a>
+   * XSD - [http://msdn2.microsoft.com/en-us/library/x6c1kb0s(VS.80).aspx MSDN]
    
 === Java XML ===
-   * <a href="http://xmlbeans.apache.org/">XmlBeans</a>
-   * <a href="http://java.sun.com/webservices/jaxb/">JAXB</a>
-   * <a href="http://jibx.sourceforge.net/">JIBX</a>
+   * [http://xmlbeans.apache.org/ XmlBeans]
+   * [http://java.sun.com/webservices/jaxb/ JAXB]
+   * [http://jibx.sourceforge.net/ JIBX]
