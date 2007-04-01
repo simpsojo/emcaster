@@ -34,4 +34,4 @@ runnable.dispatchMessages();
 == PGM Support ==
 Using JNI on windows, PGM can be used as the underlying transport. 
 
-   * <a href="http://jroller.com/page/mrettig?entry=pgm_socket_in_java_with">Example with JSocket Wrench</a>
+   * [http://jroller.com/page/mrettig?entry=pgm_socket_in_java_with Example with JSocket Wrench]
