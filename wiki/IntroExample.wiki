@@ -1,6 +1,6 @@
 == Wire Format ==
 
-Emcaster uses a standard wire format that can be parsed in any language, on any platform.
+Emcaster uses a standard wire format that can be parsed in any language, on any platform. Every message has four fields.
 
   # 4 Byte Integer - Little Endian - Topic Size
   # 4 Byte Integer - Little Endian - Message Size
