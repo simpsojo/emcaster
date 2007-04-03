@@ -2,6 +2,13 @@
 
 Emcaster uses a standard wire format that can be parsed in any language, on any platform.
 
+  # 4 Byte Integer - Little Endian - Topic Size
+  # 4 Byte Integer - Little Endian - Message Size
+  # UTF 8 - Topic Bytes
+  # Message Bytes - Application Specific Message
+
+Messages are transmitted over the network in batch format. Each network message will contain at least one message. The message rate and buffer sizes of the applications will dictate the batch size.
+
 == API's ==
 
 [IntroDotNet Intro to the .NET API]
