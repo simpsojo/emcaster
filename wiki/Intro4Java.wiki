@@ -12,7 +12,6 @@ pub.connect();
 BatchWriter writer = new BatchWriter(1024*25, pub, pub.getAddress(), pub.getPort());
 Thread thread = new Thread(writer);
 thread.start();
-long startTime = System.currentTimeMillis();
 byte[] bytes = "Hello World".getBytes();
 writer.publish("test", bytes, 0, bytes.length);
 }}}
