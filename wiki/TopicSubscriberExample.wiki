@@ -21,7 +21,7 @@ Your method should be thread safe. With multiple sources, the method will be cal
 
 = Topic Queue Subscriber =
 
-A Topic Queue Subscription enqueues messages in a single capped queue. This makes it easy to process messages in batch. The Dequeue method is thread safe, so with a multi-core machine, multiple threads can be used to process cpu intensive messages. 
+A Topic Queue Subscription enqueues messages in a single capped queue.  This allows the message processing to be batched and executed on a separate thread. Batching can increase latency, but usually results in better throughput and better average latency. The read thread is dedicated to receiving the messages as they arrive to the OS and placing them directly into memory. The application probably can allocate more memory to queueing the messages than the OS. With a multi-core/cpu machine, the TopicQueueSubscriber also allows for concurrent processing. It's also thread safe for many dispatch threads, but then message ordering can't be guaranteed as the threads will race each other to process the separate batches. 
 
 {{{
 TopicSubscriber topic= ... create a subscriber
