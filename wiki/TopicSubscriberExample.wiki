@@ -17,7 +17,7 @@ receiveSocket.Start();
 }}}
 
 == Your Delegate Method ==
-Your method should be thread safe. With multiple sources, the method will be called from multiple threads. Also, do not retain a reference the parser object since it is reused between objects. 
+Your method should be thread safe. With multiple sources, the method will be called from multiple threads. Do not retain a reference to the parser object since it is reused between objects. 
 
 = Topic Queue Subscriber =
 
