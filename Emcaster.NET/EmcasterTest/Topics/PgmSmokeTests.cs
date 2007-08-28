@@ -9,6 +9,7 @@ using Emcaster.Sockets;
 
 namespace EmcasterTest.Explicit
 {
+
     [TestFixture]
     [Explicit]
     public class PgmSmokeTests
@@ -17,16 +18,16 @@ namespace EmcasterTest.Explicit
         [Test]
         public void PubSubTest()
         {
-            IList<object> msgsReceived = new List<object>();
+            IList<ByteMessageParser> msgsReceived = new List<ByteMessageParser>();
             MessageParserFactory msgParser = new MessageParserFactory();
             PgmReader reader = new PgmReader(msgParser);
             PgmReceiver receiveSocket = new PgmReceiver("224.0.0.23", 40001, reader);
 
-            TopicSubscriber topicSubscriber = new TopicSubscriber("MSFT", msgParser);
+            TopicSubscriber topicSubscriber = new TopicSubscriber(".*", msgParser);
             topicSubscriber.Start();
             receiveSocket.Start();
             topicSubscriber.TopicMessageEvent += delegate(IMessageParser parser){
-                msgsReceived.Add(parser.ParseObject());
+                msgsReceived.Add(new ByteMessageParser(parser.Topic, parser.ParseBytes(), parser.EndPoint));
             };
 
 
@@ -39,7 +40,7 @@ namespace EmcasterTest.Explicit
             Thread.Sleep(1000);
 
             for(int i = 0; i < 10; i++)
-	            topicPublisher.PublishObject("MSFT", i, 1000);
+	            topicPublisher.PublishObject(i+"", i, 1000);
 
             Thread.Sleep(3000);
 
@@ -47,8 +48,12 @@ namespace EmcasterTest.Explicit
             receiveSocket.Dispose();	
 
             Assert.AreEqual(10, msgsReceived.Count);
-            Assert.AreEqual(0, msgsReceived[0]);
-            Assert.AreEqual(9, msgsReceived[9]);
+            Assert.AreEqual(0, msgsReceived[0].ParseObject());
+            Assert.AreEqual(9, msgsReceived[9].ParseObject());
+            for (int i = 0; i < msgsReceived.Count; i++)
+            {
+                Assert.AreEqual(i +"", msgsReceived[i].Topic);
+            }
         }
     }
 }
