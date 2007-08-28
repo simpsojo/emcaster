@@ -35,7 +35,7 @@ namespace Emcaster.Topics
                 if (_topic == null)
                 {
                     int topicSize = _currentHeader->TopicSize;
-                    _topic = _decoder.GetString(_buffer, TopicPublisher.HEADER_SIZE, topicSize);
+                    _topic = _decoder.GetString(_buffer, _offset + TopicPublisher.HEADER_SIZE, topicSize);
                 }
                 return _topic;
             }

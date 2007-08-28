@@ -30,7 +30,7 @@ namespace Emcaster.Topics
         public object ParseObject()
         {
             BinaryFormatter formatter = new BinaryFormatter();
-            MemoryStream stream = new MemoryStream();
+            MemoryStream stream = new MemoryStream(ParseBytes());
             return formatter.Deserialize(stream);
         }
         public byte[] ParseBytes()
