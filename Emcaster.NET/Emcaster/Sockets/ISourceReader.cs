@@ -13,6 +13,6 @@ namespace Emcaster.Sockets
 
         event OnException ExceptionEvent;
 
-        void AcceptSocket(Socket socket, ref bool running);
+        void AcceptSocket(Socket socket, IAcceptor acceptor);
     }
 }

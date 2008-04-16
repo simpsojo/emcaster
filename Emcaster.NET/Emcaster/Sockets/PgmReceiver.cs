@@ -1,7 +1,6 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 using System.Collections.Generic;
 using Common.Logging;
 
@@ -9,17 +8,17 @@ namespace Emcaster.Sockets
 {
     public delegate void OnReceive(EndPoint endPoint, byte[] data, int offset, int length);
 
-    public class PgmReceiver : IDisposable
+    public class PgmReceiver : IDisposable, IAcceptor
     {
         private static ILog log = LogManager.GetLogger(typeof (PgmReceiver));
 
         private bool _running = true;
         private string _ip;
         private int _port;
-        private PgmSocket _socket;
-        private ISourceReader _reader;
+        private readonly PgmSocket _socket;
+        private readonly ISourceReader _reader;
         private int _receiveBufferInBytes = 1024*128;
-        private IList<uint> _interfaceAddresses = new List<uint>();
+        private readonly IList<uint> _interfaceAddresses = new List<uint>();
 
         public PgmReceiver(string address, int port, ISourceReader reader)
         {
@@ -70,50 +69,47 @@ namespace Emcaster.Sockets
             PgmSocket.EnableGigabit(_socket);
             _socket.Listen(5);
             log.Info("Listening: " + end);
-            if (!ThreadPool.QueueUserWorkItem(RunAccept))
-            {
-                log.Error("Not able to enqueue accept delegate in thread pool.");
-            }
+            _socket.BeginAccept(OnAccept, null);
         }
 
-        private void RunAccept(object state)
+        private void OnAccept(IAsyncResult ar)
         {
-            while (_running)
-            {
-                try
-                {
-                    Socket conn = _socket.Accept();
-                    log.Info("Connection from: " + conn.RemoteEndPoint);
-                    WaitCallback runner = delegate { RunReceiver(conn); };
-                    if (!ThreadPool.QueueUserWorkItem(runner))
-                    {
-                        log.Error("Unable to Enqueue PGM Receiver");
-                    }
-                }
-                catch (Exception failed)
-                {
-                    if (_running)
-                        log.Warn("Accept Failed", failed);
-                }
-            }
-        }
-
-        private void RunReceiver(Socket receiveSocket)
-        {
-            _reader.AcceptSocket(receiveSocket, ref _running);
-        }
-
-        public void Dispose()
-        {
-            _running = false;
             try
             {
-                _socket.Close();
-            }
-            catch (Exception failed)
+                Socket conn = _socket.EndAccept(ar);
+                log.Info("Connection from: " + conn.RemoteEndPoint);
+                _reader.AcceptSocket(conn, this);
+                _socket.BeginAccept(OnAccept, null);
+            }catch(Exception failed)
             {
-                log.Warn("close failed", failed);
+                if (_running)
+                    log.Warn("Accept Failed", failed);
             }
         }
+
+        private readonly object _disposeLock = new object();
+        public void Dispose()
+        {
+            lock (_disposeLock)
+            {
+                if (_running)
+                {
+                    _running = false;
+                    try
+                    {
+                        _socket.Close();
+                    }
+                    catch (Exception failed)
+                    {
+                        log.Warn("close failed", failed);
+                    }
+                }
+            }
+        }
+
+        public bool IsRunning
+        {
+            get { return _running; }
+        }     
     }
 }
