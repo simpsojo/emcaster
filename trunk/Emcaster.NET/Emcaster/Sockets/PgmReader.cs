@@ -1,12 +1,23 @@
 using System;
+using System.Net;
 using System.Net.Sockets;
 using Common.Logging;
-using System.Net;
 
 namespace Emcaster.Sockets
 {
 
-    public class PgmReader : ISourceReader, IPacketEvent
+    public interface IAcceptor
+    {
+        bool IsRunning { get; }
+    }
+
+    public interface ISocketErrorHandler
+    {
+        void OnSocketException(Socket endpoint, SocketException failed);
+        void OnException(Socket endpoint, Exception failed);
+    }
+
+    public class PgmReader : ISourceReader, IPacketEvent, ISocketErrorHandler
     {
         private static readonly ILog log = LogManager.GetLogger(typeof (PgmReader));
 
@@ -18,8 +29,8 @@ namespace Emcaster.Sockets
         private int _readBuffer = 1024*130;
         private bool _forceBlockingOnEveryReceive = false;
 
-        public event OnSocketException SocketExceptionEvent;
-        public event OnException ExceptionEvent;
+        public event OnSocketException SocketExceptionEvent = delegate {};
+        public event OnException ExceptionEvent = delegate {};
 
         public PgmReader(IByteParserFactory factory)
         {
@@ -49,59 +60,34 @@ namespace Emcaster.Sockets
         }
 
 
-        public void AcceptSocket(Socket receiveSocket, ref bool _running)
+        public void AcceptSocket(Socket receiveSocket, IAcceptor acceptor)
         {
-            IByteParser parser = _parserFactory.Create(receiveSocket);
-            using (receiveSocket)
+            try
             {
-                EndPoint endpoint = receiveSocket.RemoteEndPoint;
+                IByteParser parser = _parserFactory.Create(receiveSocket);
                 PgmSocket.EnableGigabit(receiveSocket);
                 if (_receiveBufferSize > 0)
                 {
                     receiveSocket.ReceiveBufferSize = _receiveBufferSize;
                 }
-                receiveSocket.Blocking = true;
-
                 byte[] buffer = new byte[_readBuffer];
-                try
-                {
-                    int read = receiveSocket.Receive(buffer, 0, _readBuffer, SocketFlags.None);
-                    while (read > 0 && _running)
-                    {
-                        OnReceive recv = ReceiveEvent;
-                        if (recv != null)
-                        {
-                            recv(endpoint, buffer, 0, read);
-                        }
-                        parser.OnBytes(endpoint, buffer, 0, read);
-                        if (_forceBlockingOnEveryReceive)
-                        {
-                            receiveSocket.Blocking = true;
-                        }
-                        read = receiveSocket.Receive(buffer, 0, _readBuffer, SocketFlags.None);
-                    }
-                }
-                catch (SocketException socketFailed)
-                {
-                    log.Info("Native Error: " + socketFailed.NativeErrorCode);
-                    log.Info("Socket Error Code: " + socketFailed.SocketErrorCode);
-                    log.Info("Socket Error: " + socketFailed.ErrorCode, socketFailed);
-                    OnSocketException socketExc = SocketExceptionEvent;
-                    if (socketExc != null)
-                    {
-                        socketExc(receiveSocket, socketFailed);
-                    }
-                }
-                catch (Exception failed)
-                {
-                    log.Info("Unknown Exception", failed);
-                    OnException excEvent = ExceptionEvent;
-                    if (excEvent != null)
-                    {
-                        excEvent(receiveSocket, failed);
-                    }
-                }
+                AsyncReader reader = new AsyncReader(parser, buffer, acceptor, this, receiveSocket);
+                reader.BeginReceive();
+            }catch(Exception failed)
+            {
+                receiveSocket.Close();
+                log.Error("BeginReceive Failed", failed);
             }
+        }
+
+        public void OnSocketException(Socket endpoint, SocketException failed)
+        {
+            SocketExceptionEvent(endpoint, failed);
+        }
+
+        public void OnException(Socket socket, Exception error)
+        {
+            ExceptionEvent(socket, error);
         }
     }
 }

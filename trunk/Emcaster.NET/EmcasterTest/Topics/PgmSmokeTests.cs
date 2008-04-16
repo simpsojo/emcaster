@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Text;
 using System.Threading;
+using Common.Logging;
+using Common.Logging.Simple;
 using NUnit.Framework;
 
 using Emcaster.Topics;
@@ -18,6 +21,7 @@ namespace EmcasterTest.Explicit
         [Test]
         public void PubSubTest()
         {
+            LogManager.Adapter = new ConsoleOutLoggerFactoryAdapter(new NameValueCollection());
             IList<ByteMessageParser> msgsReceived = new List<ByteMessageParser>();
             MessageParserFactory msgParser = new MessageParserFactory();
             PgmReader reader = new PgmReader(msgParser);
