@@ -36,6 +36,7 @@ namespace Emcaster.Sockets
         {
             if(!_acceptor.IsRunning || !_running)
             {
+                AttemptClose();
                 return;
             }
             try
